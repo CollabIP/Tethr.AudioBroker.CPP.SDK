@@ -27,13 +27,13 @@
     <ClInclude Include="RecordingSettingSummary.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AudioBroker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Configuration.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ConnectionString.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tethr.AudioBroker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,13 +6,10 @@
 int main()
 {
 	
-	
-	Poco::AutoPtr<Poco::Util::PropertyFileConfiguration> pConf;
-	pConf = new Poco::Util::PropertyFileConfiguration("Configuration.Properties");
-	
-	std::string uri = pConf->getString("Uri");
-	std::string apiUser = pConf->getString("ApiUser");
-	std::string password = pConf->getString("Password");
+	//Create Session
+	tethr::Session session("Configuration.Properties");
+
+	std::string authToken = session.GetApiAuthToken(false);
 
     return 0;
 }

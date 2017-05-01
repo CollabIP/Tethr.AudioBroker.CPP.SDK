@@ -9,6 +9,8 @@ namespace tethr {
 		_hostUri = hostUri;
 		_apiUser = apiUser;
 		_apiPassword = apiPassword;
+
+		Poco::Net::initializeSSL();  //Review:: maybe use Poco::Crypto::OpenSSLInitializer::initialize(); here instead
 	}
 
 	Session::Session(std::string configurationFile)
@@ -18,6 +20,8 @@ namespace tethr {
 		_hostUri = connectionString.hostUri;
 		_apiUser = connectionString.apiUser;
 		_apiPassword = connectionString.password;
+
+		Poco::Net::initializeSSL();  //Review:: maybe use Poco::Crypto::OpenSSLInitializer::initialize(); here instead
 	}
 
 	Session::~Session()
@@ -40,50 +44,55 @@ namespace tethr {
 		{
 			Poco::FastMutex::ScopedLock lock(_mutex);
 			
-			TokenResponse token = GetClientCredentialsAsync(_apiUser, _apiPassword);
+			TokenResponse token = GetClientCredentials(_apiUser, _apiPassword);
 			_apiToken = token;
 		}
 
 		return _apiToken.AccessToken;
 	}
 
-	Session::TokenResponse Session::GetClientCredentialsAsync(std::string clientId, std::string clientSecret)
-	{
-		//Create the form.  Default is FormUrlEncoded
+	
+	Session::TokenResponse Session::GetClientCredentials(std::string clientId, std::string clientSecret) const
+	{	
+		//This is barely documented anywhere by POCO but you do need an SSL Manager for the request or risk getting odd/difficult to diagnose exceptions.
+		//Note that InitalizeSSL is called in the constructor.
+		Poco::SharedPtr<Poco::Net::InvalidCertificateHandler> ptrHandler = new Poco::Net::AcceptCertificateHandler(false);
+		Poco::Net::Context context(Poco::Net::Context::CLIENT_USE, "", "", "", Poco::Net::Context::VERIFY_RELAXED, 9, false, "ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH");
+		Poco::Net::SSLManager::instance().initializeClient(0, ptrHandler, &context);
+
+		//Create the HTTPSClientSession & initialize the request
+		// Create the request URI.
+		Poco::URI uri(_hostUri.toString() + "/Token");
+		Poco::Net::HTTPSClientSession session(uri.getHost(), uri.getPort(), &context);
+		Poco::Net::HTTPRequest request(Poco::Net::HTTPRequest::HTTP_POST, uri.getPath(), Poco::Net::HTTPMessage::HTTP_1_1);
+
+		//Create the form.  Default is FormUrlEncoded so no need to set anything else here.
 		Poco::Net::HTMLForm form;
 		form.set("grant_type", "client_credentials");
 		form.set("client_secret", clientSecret);
 		form.set("client_id", clientId);
-		
-		// Create the request URI.
-		Poco::URI uri(_hostUri.toString() + "/Token");
 
-		Poco::Net::HTTPSClientSession session(uri.getHost(), uri.getPort());
-		Poco::Net::HTTPRequest request(Poco::Net::HTTPRequest::HTTP_POST, uri.getPath(), Poco::Net::HTTPMessage::HTTP_1_1);
-
-		// Send the request.
 		form.prepareSubmit(request);
-		std::ostream& ostr = session.sendRequest(request);
-		form.write(ostr);
+		std::ostream& requestStream = session.sendRequest(request);
+
+		//Send the request
+		form.write(requestStream);
 
 		// Receive the response.
 		Poco::Net::HTTPResponse response;
-		std::istream& rs = session.receiveResponse(response);
+		std::istream& responseStream = session.receiveResponse(response);
 
-		Poco::AutoPtr<Poco::Util::JSONConfiguration> pResult = new Poco::Util::JSONConfiguration(rs);
-
-		// If everything went fine, return the JSON document.
-		// Otherwise throw an exception.
+		Poco::AutoPtr<Poco::Util::JSONConfiguration> pResult = new Poco::Util::JSONConfiguration(responseStream);
 		if (response.getStatus() == Poco::Net::HTTPResponse::HTTP_OK)
 		{
-			//return pResult;
-		}
-		else
-		{
-			//throw Poco::ApplicationException("Twitter Error", pResult->getString("errors[0].message", ""));
+			//If everything is ok then parse the JSON response to a TokenResponse and return the result
+			//Otherwise you are getting an exception.
+
+
+			return pResult;
 		}
 		
-		return TokenResponse();
+		throw Poco::ApplicationException("Tethr Error", pResult->getString("errors[0].message", ""));
 	}
 
 #pragma region Nested Classes

@@ -1,4 +1,5 @@
 #pragma once
+#include "Tethr.AudioBroker.h"
 #include <string>
 #include <map>
 #include "Poco/Mutex.h"
@@ -6,6 +7,9 @@
 #include "Poco/LocalDateTime.h"
 #include "Poco/URI.h"
 #include "Poco/Net/HTTPSClientSession.h"
+#include "Poco/Net/InvalidCertificateHandler.h"
+#include "Poco/Net/SSLManager.h"
+#include "Poco/Net/AcceptCertificateHandler.h"
 #include "Poco/Net/HTTPRequest.h"
 #include "Poco/Net/HTTPResponse.h"
 #include "Poco/Net/HTMLForm.h"
@@ -14,7 +18,7 @@
 #include "Poco/URI.h"
 
 namespace tethr {
-	class Session
+	class TETHRAUDIOBROKER_API Session
 	{
 	public:
 		//Todo: Not sure if we need to template this or overload for wstring given that this is a customer facing SDK
@@ -24,7 +28,6 @@ namespace tethr {
 		~Session();
 
 		void ClearAuthToken();
-
 	private:
 
 		class TokenResponse
@@ -52,8 +55,10 @@ namespace tethr {
 
 		TokenResponse _apiToken;
 
+		//std::string GetApiAuthToken(bool force = false);
+		//TokenResponse GetClientCredentialsAsync(std::string clientId, std::string clientSecret);
+	public: //Temporary for testing
 		std::string GetApiAuthToken(bool force = false);
-		TokenResponse GetClientCredentialsAsync(std::string clientId, std::string clientSecret);
-
+		TokenResponse GetClientCredentials(std::string clientId, std::string clientSecret) const;
 	};
 }
