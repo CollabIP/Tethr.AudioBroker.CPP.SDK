@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tethr.AudioBroker", "Tethr.AudioBroker\Tethr.AudioBroker.vcxproj", "{F9F912F3-27EF-49F4-849E-A8C06487B5D3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tethr.AudioUpload.Sample", "Tethr.AudioUpload.Sample\Tethr.AudioUpload.Sample.vcxproj", "{90E576FA-3181-4970-A78D-963576F0706F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		debug_shared_100_unicode|x64 = debug_shared_100_unicode|x64
+		debug_shared_100_unicode|x86 = debug_shared_100_unicode|x86
+		release_shared_100_unicode|x64 = release_shared_100_unicode|x64
+		release_shared_100_unicode|x86 = release_shared_100_unicode|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F9F912F3-27EF-49F4-849E-A8C06487B5D3}.debug_shared_100_unicode|x64.ActiveCfg = debug_shared_100_unicode|x64
+		{F9F912F3-27EF-49F4-849E-A8C06487B5D3}.debug_shared_100_unicode|x64.Build.0 = debug_shared_100_unicode|x64
+		{F9F912F3-27EF-49F4-849E-A8C06487B5D3}.debug_shared_100_unicode|x86.ActiveCfg = debug_shared_100_unicode|Win32
+		{F9F912F3-27EF-49F4-849E-A8C06487B5D3}.debug_shared_100_unicode|x86.Build.0 = debug_shared_100_unicode|Win32
+		{F9F912F3-27EF-49F4-849E-A8C06487B5D3}.release_shared_100_unicode|x64.ActiveCfg = release_shared_100_unicode|x64
+		{F9F912F3-27EF-49F4-849E-A8C06487B5D3}.release_shared_100_unicode|x64.Build.0 = release_shared_100_unicode|x64
+		{F9F912F3-27EF-49F4-849E-A8C06487B5D3}.release_shared_100_unicode|x86.ActiveCfg = release_shared_100_unicode|Win32
+		{F9F912F3-27EF-49F4-849E-A8C06487B5D3}.release_shared_100_unicode|x86.Build.0 = release_shared_100_unicode|Win32
+		{90E576FA-3181-4970-A78D-963576F0706F}.debug_shared_100_unicode|x64.ActiveCfg = debug_shared_100_unicode|x64
+		{90E576FA-3181-4970-A78D-963576F0706F}.debug_shared_100_unicode|x64.Build.0 = debug_shared_100_unicode|x64
+		{90E576FA-3181-4970-A78D-963576F0706F}.debug_shared_100_unicode|x86.ActiveCfg = debug_shared_100_unicode|Win32
+		{90E576FA-3181-4970-A78D-963576F0706F}.debug_shared_100_unicode|x86.Build.0 = debug_shared_100_unicode|Win32
+		{90E576FA-3181-4970-A78D-963576F0706F}.release_shared_100_unicode|x64.ActiveCfg = release_shared_100_unicode|x64
+		{90E576FA-3181-4970-A78D-963576F0706F}.release_shared_100_unicode|x64.Build.0 = release_shared_100_unicode|x64
+		{90E576FA-3181-4970-A78D-963576F0706F}.release_shared_100_unicode|x86.ActiveCfg = release_shared_100_unicode|Win32
+		{90E576FA-3181-4970-A78D-963576F0706F}.release_shared_100_unicode|x86.Build.0 = release_shared_100_unicode|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
