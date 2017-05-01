@@ -276,6 +276,7 @@
     <ClInclude Include="ConnectionString.h" />
     <ClInclude Include="RecordingSettings.h" />
     <ClInclude Include="RecordingSettingSummary.h" />
+    <ClInclude Include="SendFileResult.h" />
     <ClInclude Include="Session.h" />
     <ClInclude Include="Tethr.AudioBroker.h" />
   </ItemGroup>

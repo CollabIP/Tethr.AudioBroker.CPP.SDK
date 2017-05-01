@@ -36,6 +36,9 @@
     <ClInclude Include="Tethr.AudioBroker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SendFileResult.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Session.cpp">

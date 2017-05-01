@@ -15,6 +15,7 @@
 #include "Poco/Net/HTMLForm.h"
 #include "Poco/Net/OAuth20Credentials.h"
 #include "Poco/Util/JSONConfiguration.h"
+#include "Poco/JSON/Parser.h"
 #include "Poco/URI.h"
 
 namespace tethr {
@@ -42,7 +43,7 @@ namespace tethr {
 			std::string AccessToken;
 			std::string TokenType;
 			long ExpiresInSeconds;
-			Poco::DateTime CreatedTimeStamp;
+			Poco::Timestamp CreatedTimeStamp;
 
 			bool IsValid() const;
 		};
@@ -55,9 +56,6 @@ namespace tethr {
 
 		TokenResponse _apiToken;
 
-		//std::string GetApiAuthToken(bool force = false);
-		//TokenResponse GetClientCredentialsAsync(std::string clientId, std::string clientSecret);
-	public: //Temporary for testing
 		std::string GetApiAuthToken(bool force = false);
 		TokenResponse GetClientCredentials(std::string clientId, std::string clientSecret) const;
 	};

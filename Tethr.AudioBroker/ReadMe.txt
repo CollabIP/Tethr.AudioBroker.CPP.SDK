@@ -23,9 +23,14 @@ Tethr.AudioBroker.vcxproj.filters
 /////////////////////////////////////////////////////////////////////////////
 Other notes:
 
-AppWizard uses "TODO:" comments to indicate parts of the source code you
-should add to or customize.
+This is a public SDK and we are using a more explicit syntax in code to ensure backward 
+compatibility as well as limiting the newer C++ features and using OpenSSL for cross platform. 
 
-Todo: Implement Exception Handling and/or status code responses to callers
+This SDK should remain compatible with older versions of Visual Studio (2008) for the forseeable future.
+
+
+Todo: Implement/Review Exception Handling and/or status code responses to callers
+Todo: Add logging and logger injection.
+Todo: Add Async Methods - I'm not sure if POCO has this today.  C++ REST SDK may be the best option, but will required C++11 support
 
 /////////////////////////////////////////////////////////////////////////////

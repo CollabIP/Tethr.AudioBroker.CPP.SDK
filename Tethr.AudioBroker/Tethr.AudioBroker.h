@@ -28,9 +28,12 @@ TETHRAUDIOBROKER_API int fnTethrAudioBroker(void);
 #include <string>
 #include "Poco/AutoPtr.h"
 #include "Poco/Util/PropertyFileConfiguration.h"
+#include "Poco/DateTimeFormatter.h"
+#include "Poco/DateTimeFormat.h"
 
 #include "Configuration.h"
 #include "ConnectionString.h"
+#include "SendFileResult.h"
 #include "Session.h"
 
 //Todo: Make XPlatform
