@@ -33,10 +33,13 @@
     <ClInclude Include="ConnectionString.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Tethr.AudioBroker.h">
+    <ClInclude Include="SendFileResult.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SendFileResult.h">
+    <ClInclude Include="ArchivedRecording.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioBroker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -48,6 +51,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Configuration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ArchivedRecording.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

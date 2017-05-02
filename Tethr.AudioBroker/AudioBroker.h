@@ -6,25 +6,20 @@
 // that uses this DLL. This way any other project whose source files include this file see 
 // TETHRTEST_API functions as being imported from a DLL, whereas this DLL sees symbols
 // defined with this macro as being exported.
-#ifdef TETHRAUDIOBROKER_EXPORTS
-#define TETHRAUDIOBROKER_API __declspec(dllexport)
+#ifdef AUDIOBROKER_EXPORTS
+#define AUDIOBROKER_API __declspec(dllexport)
 #else
-#define TETHRAUDIOBROKER_API __declspec(dllimport)
+#define AUDIOBROKER_API __declspec(dllimport)
 #endif
 
 // This class is exported from the Tethr.Test.dll
-class TETHRAUDIOBROKER_API CTethrAudioBroker {
+class AUDIOBROKER_API CTethrAudioBroker {
 public:
-	CTethrAudioBroker(void);
+	CAudioBroker(void);
 	// TODO: add your methods here.
 };
 
-extern TETHRAUDIOBROKER_API int nTethrTest;
-
-TETHRAUDIOBROKER_API int fnTethrAudioBroker(void);
-
 //Include Additional Headers
-
 #include <string>
 #include "Poco/AutoPtr.h"
 #include "Poco/Util/PropertyFileConfiguration.h"

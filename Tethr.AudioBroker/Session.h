@@ -1,5 +1,5 @@
 #pragma once
-#include "Tethr.AudioBroker.h"
+#include "AudioBroker.h"
 #include <string>
 #include <map>
 #include "Poco/Mutex.h"
@@ -19,7 +19,7 @@
 #include "Poco/URI.h"
 
 namespace tethr {
-	class TETHRAUDIOBROKER_API Session
+	class AUDIOBROKER_API Session
 	{
 	public:
 		//Todo: Not sure if we need to template this or overload for wstring given that this is a customer facing SDK

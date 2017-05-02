@@ -140,7 +140,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TETHRAUDIOBROKER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;AUDIOBROKER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>C:\Source\GitHub\POCO-Binaries\1.7.8\Crypto\include;C:\Source\GitHub\POCO-Binaries\1.7.8\OpenSSL-Win32\include;C:\Source\GitHub\POCO-Binaries\1.7.8\Util\include;C:\Source\GitHub\POCO-Binaries\1.7.8\Net\include;C:\Source\GitHub\POCO-Binaries\1.7.8\NetSSL_OpenSSL\include;C:\Source\GitHub\POCO-Binaries\1.7.8\JSON\include;C:\Source\GitHub\POCO-Binaries\1.7.8\Foundation\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -272,15 +272,17 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArchivedRecording.h" />
     <ClInclude Include="Configuration.h" />
     <ClInclude Include="ConnectionString.h" />
     <ClInclude Include="RecordingSettings.h" />
     <ClInclude Include="RecordingSettingSummary.h" />
     <ClInclude Include="SendFileResult.h" />
     <ClInclude Include="Session.h" />
-    <ClInclude Include="Tethr.AudioBroker.h" />
+    <ClInclude Include="AudioBroker.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ArchivedRecording.cpp" />
     <ClCompile Include="Configuration.cpp" />
     <ClCompile Include="RecordingSettings.cpp" />
     <ClCompile Include="Session.cpp" />
