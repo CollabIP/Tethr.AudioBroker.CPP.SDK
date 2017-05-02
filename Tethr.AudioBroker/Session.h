@@ -29,6 +29,8 @@ namespace tethr {
 		~Session();
 
 		void ClearAuthToken();
+
+		bool ResetAuthTokenOnUnauthorized = true; //When set this will automatically reauthorize the token on the next request if 401 Unauthorized is received
 	private:
 
 		class TokenResponse
@@ -46,6 +48,10 @@ namespace tethr {
 			Poco::Timestamp CreatedTimeStamp;
 
 			bool IsValid() const;
+
+			//Todo: Review Object in C# SDK.  May need templating
+			std::string Get(std::string resourcePath);
+			std::string PostMutliPartFormData(std::string resourcePath, object info, std::ostream buffer, std::string dataPartMediaType = "application/octet-stream");
 		};
 
 		Poco::FastMutex  _mutex;

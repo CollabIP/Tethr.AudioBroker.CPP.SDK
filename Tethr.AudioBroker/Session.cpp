@@ -167,6 +167,10 @@ namespace tethr {
 	
 		return false;
 	}
+	std::string Session::TokenResponse::Get(std::string resourcePath)
+	{
+		return std::string();
+	}
 #pragma endregion
 }
 
