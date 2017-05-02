@@ -272,7 +272,9 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArchiveCallResponse.h" />
     <ClInclude Include="ArchivedRecording.h" />
+    <ClInclude Include="CallStatus.h" />
     <ClInclude Include="Configuration.h" />
     <ClInclude Include="ConnectionString.h" />
     <ClInclude Include="RecordingSettings.h" />
@@ -280,6 +282,7 @@
     <ClInclude Include="SendFileResult.h" />
     <ClInclude Include="Session.h" />
     <ClInclude Include="AudioBroker.h" />
+    <ClInclude Include="SessionStatus.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ArchivedRecording.cpp" />

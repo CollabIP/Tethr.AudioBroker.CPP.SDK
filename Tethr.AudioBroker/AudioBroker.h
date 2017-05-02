@@ -13,11 +13,15 @@
 #endif
 
 // This class is exported from the Tethr.Test.dll
-class AUDIOBROKER_API CTethrAudioBroker {
+class AUDIOBROKER_API CAudioBroker {
 public:
 	CAudioBroker(void);
 	// TODO: add your methods here.
 };
+
+inline CAudioBroker::CAudioBroker()
+{
+}
 
 //Include Additional Headers
 #include <string>

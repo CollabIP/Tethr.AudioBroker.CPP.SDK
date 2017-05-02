@@ -1,13 +1,16 @@
 #pragma once
 #include <string>
 
-struct RecordingSettingSummary
-{
-	std::string RefType;
+namespace tethr {
+	struct RecordingSettingSummary
+	{
+		std::string RefType;
 
-	std::string Source;
+		std::string Source;
 
-	std::string LookupId;
+		std::string LookupId;
 
-	std::string RecordingSetting;
-};
+		std::string RecordingSetting;
+	};
+}
+

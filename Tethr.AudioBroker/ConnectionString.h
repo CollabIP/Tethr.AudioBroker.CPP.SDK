@@ -1,9 +1,12 @@
 #pragma once
 #include <string>
 
-struct ConnectionString
-{
-	std::string hostUri;
-	std::string apiUser;
-	std::string password;
-};
+namespace tethr {
+	struct ConnectionString
+	{
+		std::string HostUri;
+		std::string ApiUser;
+		std::string Password;
+	};
+}
+

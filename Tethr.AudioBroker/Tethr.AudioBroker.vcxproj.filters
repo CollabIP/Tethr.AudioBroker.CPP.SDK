@@ -42,6 +42,15 @@
     <ClInclude Include="AudioBroker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ArchiveCallResponse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CallStatus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionStatus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Session.cpp">

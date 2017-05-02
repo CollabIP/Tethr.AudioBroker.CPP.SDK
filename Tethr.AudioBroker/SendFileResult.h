@@ -2,9 +2,12 @@
 #include <string>
 #include <Poco/DateTime.h>
 
-struct SendFileResult
-{
-	std::string callId;
-	std::string sessionId;
-	Poco::DateTime startTime;
-};
+namespace tethr {
+	struct SendFileResult
+	{
+		std::string CallId;
+		std::string SessionId;
+		Poco::DateTime StartTime;
+	};
+}
+

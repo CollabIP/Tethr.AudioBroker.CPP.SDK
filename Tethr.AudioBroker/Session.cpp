@@ -26,9 +26,9 @@ namespace tethr {
 	{
 		ConnectionString connectionString = Configuration::LoadConfiguration(configurationFile);
 
-		_hostUri = connectionString.hostUri;
-		_apiUser = connectionString.apiUser;
-		_apiPassword = connectionString.password;
+		_hostUri = connectionString.HostUri;
+		_apiUser = connectionString.ApiUser;
+		_apiPassword = connectionString.Password;
 
 		Poco::Net::initializeSSL();  //Review:: maybe use Poco::Crypto::OpenSSLInitializer::initialize(); here instead
 	}
