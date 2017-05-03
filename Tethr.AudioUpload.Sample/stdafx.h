@@ -11,4 +11,4 @@
 #include <tchar.h>
 
 // TODO: reference additional headers your program requires here
-#include "Tethr.AudioBroker.h"
+#include "AudioBroker.h"

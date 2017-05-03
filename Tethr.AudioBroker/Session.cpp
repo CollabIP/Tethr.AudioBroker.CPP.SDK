@@ -1,42 +1,27 @@
 #include "Session.h"
-#include "Configuration.h"
 
 namespace tethr {
 	
-	/// <summary>
-	/// Initializes a new instance of the <see cref="Session"/> class.
-	/// </summary>
-	/// <param name="hostUri">https://yourcompanyname.audio.labs.Tethr.io</param>
-	/// <param name="apiUser">UserName</param>
-	/// <param name="password">Password</param>
-	Session::Session(std::string hostUri, std::string apiUser, std::string apiPassword)
+	Session::Session(): ResetAuthTokenOnUnauthorized(true)
 	{
-		_hostUri = hostUri;
-		_apiUser = apiUser;
-		_apiPassword = apiPassword;
-
-		Poco::Net::initializeSSL();  //Review:: maybe use Poco::Crypto::OpenSSLInitializer::initialize(); here instead
-	}
-	
-	/// <summary>
-	/// Initializes a new instance of the <see cref="Session"/> class.
-	/// </summary>
-	/// <param name="configurationFile">The configuration file.</param>
-	Session::Session(std::string configurationFile)
-	{
-		ConnectionString connectionString = Configuration::LoadConfiguration(configurationFile);
-
-		_hostUri = connectionString.HostUri;
-		_apiUser = connectionString.ApiUser;
-		_apiPassword = connectionString.Password;
-
-		Poco::Net::initializeSSL();  //Review:: maybe use Poco::Crypto::OpenSSLInitializer::initialize(); here instead
+		Poco::Net::initializeSSL(); //Review:: maybe use Poco::Crypto::OpenSSLInitializer::initialize(); here instead
 	}
 
 	Session::~Session()
 	{
+		Poco::Net::uninitializeSSL();
 	}
-	
+
+	// <summary>
+	/// Instances this instance as a Singleton
+	/// </summary>
+	/// <returns></returns>
+	static Session& instance(std::string hostUri, std::string apiUser, std::string apiPassword)
+	{
+		static Poco::SingletonHolder<Session> singletonHolder;
+		return *singletonHolder.get();
+	}
+
 	/// <summary>
 	/// Clears the authentication token.
 	/// </summary>
@@ -48,7 +33,271 @@ namespace tethr {
 		_apiToken.CreatedTimeStamp = NULL;
 		_apiToken.ExpiresInSeconds = 0;
 	}
+		
+	/// <summary>
+	/// Gets the specified resource path.
+	/// </summary>
+	/// <param name="resourcePath">The resource path.  This path should start with a leading slash like /Token or /callCapture/v1/archive </param>
+	/// <returns>Poco::DynamicStruct</returns>
+	/// <remarks>Throws Poco::ApplicationException on Error</remarks>
+	Poco::DynamicStruct Session::Get(std::string resourcePath)
+	{
+		//This is barely documented anywhere by POCO but you do need an SSL Manager for the request or risk getting odd/difficult to diagnose exceptions.
+		//Note that InitalizeSSL is called in the constructor.
+		Poco::SharedPtr<Poco::Net::InvalidCertificateHandler> ptrHandler = new Poco::Net::AcceptCertificateHandler(false);
+		Poco::Net::Context context(Poco::Net::Context::CLIENT_USE, "", "", "", Poco::Net::Context::VERIFY_RELAXED, 9, false, "ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH");
+		Poco::Net::SSLManager::instance().initializeClient(nullptr, ptrHandler, &context);
+
+		//Create the HTTPSClientSession & initialize the request
+		// Create the request URI.
+		Poco::URI uri(HostUri.toString() + resourcePath);
+		Poco::Net::HTTPSClientSession session(uri.getHost(), uri.getPort(), &context);
+		Poco::Net::HTTPRequest request(Poco::Net::HTTPRequest::HTTP_GET, uri.getPath(), Poco::Net::HTTPMessage::HTTP_1_1);
+
+		std::string accessToken = GetApiAuthToken();
+
+		//This call creates the bearer token and adds it to the header
+		Poco::Net::OAuth20Credentials(accessToken).authenticate(request);
+
+		//Send the HTTP GET Request
+		session.sendRequest(request);
+
+		// Receive the response.
+		Poco::Net::HTTPResponse response;
+		std::istream& responseStream = session.receiveResponse(response);
+
+		//Do some basic response code checks
+		EnsureAuthorizedStatusCode(response); //This does a status code check along with some other token maintenance (if required)
+
+		if (response.getStatus() == Poco::Net::HTTPResponse::HTTP_NOT_FOUND)
+			throw Poco::ApplicationException("The requested resource was not found.");
+
+		//Parse JSON Response
+		Poco::JSON::Parser parser;
+		Poco::Dynamic::Var result = parser.parse(responseStream);
+
+		if (_stricmp(response.getContentType().c_str(), "application/json") == 0)
+		{
+			Poco::JSON::Object::Ptr pJsonObject = result.extract<Poco::JSON::Object::Ptr>();
+
+			//Todo:  Review - Not really sure if I should return the ptr here or if I should copy to a DynamicStruct
+			//Todo:  The .NET code serializes the json to an object of type T so a dynamic struct may be more in line with this method, but why not just
+			//Todo:  return the json in an object and let the caller do what they will?  DynamicStruct is probably the right answer though
+			if (response.getStatus() == Poco::Net::HTTPResponse::HTTP_OK)
+			{
+				// copy/convert to Poco::DynamicStruct
+				Poco::DynamicStruct ds = *pJsonObject;
+				return ds;
+			}
+
+			throw Poco::ApplicationException(response.getReason(), response.getStatus());
+		}
+
+		std::string error = "Unexpected content type returned from server.  Expected application/json and received " + response.getContentType();
+		throw Poco::ApplicationException(error);
+	}
 	
+	/// <summary>
+	/// Puts the specified resource path.
+	/// </summary>
+	/// <param name="resourcePath">The resource path.  This path should start with a leading slash like /Token or /callCapture/v1/archive </param>
+	/// <param name="body">The body as a JSON Object</param>
+	/// <remarks>Throws Poco::ApplicationException on Error</remarks>
+	void Session::Put(std::string resourcePath, Poco::JSON::Object body)
+	{
+		//This is barely documented anywhere by POCO but you do need an SSL Manager for the request or risk getting odd/difficult to diagnose exceptions.
+		//Note that InitalizeSSL is called in the constructor.
+		Poco::SharedPtr<Poco::Net::InvalidCertificateHandler> ptrHandler = new Poco::Net::AcceptCertificateHandler(false);
+		Poco::Net::Context context(Poco::Net::Context::CLIENT_USE, "", "", "", Poco::Net::Context::VERIFY_RELAXED, 9, false, "ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH");
+		Poco::Net::SSLManager::instance().initializeClient(nullptr, ptrHandler, &context);
+
+		//Create the HTTPSClientSession & initialize the request
+		// Create the request URI.
+		Poco::URI uri(HostUri.toString() + resourcePath);
+		Poco::Net::HTTPSClientSession session(uri.getHost(), uri.getPort(), &context);
+		Poco::Net::HTTPRequest request(Poco::Net::HTTPRequest::HTTP_POST, uri.getPath(), Poco::Net::HTTPMessage::HTTP_1_1);
+		std::string accessToken = GetApiAuthToken();
+
+		//This call creates the bearer token and adds it to the header
+		Poco::Net::OAuth20Credentials(accessToken).authenticate(request);
+
+		std::stringstream bodyStream;
+		body.stringify(bodyStream); //Used to set content length
+		request.setKeepAlive(true);
+		request.setContentLength(bodyStream.str().size());
+		request.setContentType("application/json");  
+
+		std::ostream& requestStream = session.sendRequest(request);
+		body.stringify(requestStream); //Write to request stream (Send)
+
+		// Receive the response.
+		Poco::Net::HTTPResponse response;
+		std::istream& responseStream = session.receiveResponse(response);
+
+		//Parse JSON Response
+		Poco::JSON::Parser parser;
+		Poco::Dynamic::Var result = parser.parse(responseStream);
+
+		//Do some basic response code checks
+		EnsureAuthorizedStatusCode(response); //This does a status code check along with some other token maintenance (if required)
+
+		if (response.getStatus() == Poco::Net::HTTPResponse::HTTP_NOT_FOUND)
+			throw Poco::ApplicationException("The requested resource was not found.");
+
+		Poco::JSON::Object::Ptr object = result.extract<Poco::JSON::Object::Ptr>();
+
+		if (response.getStatus() != Poco::Net::HTTPResponse::HTTP_OK)
+		{
+			throw Poco::ApplicationException(response.getReason(), response.getStatus());
+		}
+	}
+	
+	/// <summary>
+	/// Posts the specified resource path.
+	/// </summary>
+	/// <param name="resourcePath">The resource path.  This path should start with a leading slash like /Token or /callCapture/v1/archive </param>
+	/// <param name="body">The body as a JSON Object</param>
+	/// <returns>Poco::DynamicStruct</returns>
+	/// <remarks>Throws Poco::ApplicationException on Error</remarks>
+	Poco::DynamicStruct Session::Post(std::string resourcePath, Poco::JSON::Object body)
+	{
+		//This is barely documented anywhere by POCO but you do need an SSL Manager for the request or risk getting odd/difficult to diagnose exceptions.
+		//Note that InitalizeSSL is called in the constructor.
+		Poco::SharedPtr<Poco::Net::InvalidCertificateHandler> ptrHandler = new Poco::Net::AcceptCertificateHandler(false);
+		Poco::Net::Context context(Poco::Net::Context::CLIENT_USE, "", "", "", Poco::Net::Context::VERIFY_RELAXED, 9, false, "ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH");
+		Poco::Net::SSLManager::instance().initializeClient(nullptr, ptrHandler, &context);
+
+		//Create the HTTPSClientSession & initialize the request
+		// Create the request URI.
+		Poco::URI uri(HostUri.toString() + resourcePath);
+		Poco::Net::HTTPSClientSession session(uri.getHost(), uri.getPort(), &context);
+		Poco::Net::HTTPRequest request(Poco::Net::HTTPRequest::HTTP_POST, uri.getPath(), Poco::Net::HTTPMessage::HTTP_1_1);
+		std::string accessToken = GetApiAuthToken();
+
+		//This call creates the bearer token and adds it to the header
+		Poco::Net::OAuth20Credentials(accessToken).authenticate(request);
+
+		std::stringstream bodyStream;
+		body.stringify(bodyStream); //Used to set content length
+		request.setKeepAlive(true);
+		request.setContentLength(bodyStream.str().size());
+		request.setContentType("application/json");
+
+		std::ostream& requestStream = session.sendRequest(request);
+		body.stringify(requestStream); //Write to request stream (Send)
+
+		// Receive the response.
+		Poco::Net::HTTPResponse response;
+		std::istream& responseStream = session.receiveResponse(response);
+
+		//Do some basic response code checks
+		EnsureAuthorizedStatusCode(response); //This does a status code check along with some other token maintenance (if required)
+
+		if (response.getStatus() == Poco::Net::HTTPResponse::HTTP_NOT_FOUND)
+			throw Poco::ApplicationException("The requested resource was not found.");
+
+		//Parse JSON Response
+		Poco::JSON::Parser parser;
+		Poco::Dynamic::Var result = parser.parse(responseStream);
+
+		if (_stricmp(response.getContentType().c_str(), "application/json") == 0)
+		{
+			Poco::JSON::Object::Ptr pJsonObject = result.extract<Poco::JSON::Object::Ptr>();
+
+			//Todo:  Review - Not really sure if I should return the ptr here or if I should copy to a DynamicStruct
+			//Todo:  The .NET code serializes the json to an object of type T so a dynamic struct may be more in line with this method, but why not just
+			//Todo:  return the json in an object and let the caller do what they will?  DynamicStruct is probably the right answer though
+			if (response.getStatus() == Poco::Net::HTTPResponse::HTTP_OK)
+			{
+				// copy/convert to Poco::DynamicStruct
+				Poco::DynamicStruct ds = *pJsonObject;
+				return ds;
+			}
+
+			throw Poco::ApplicationException(response.getReason(), response.getStatus());
+		}
+
+		std::string error = "Unexpected content type returned from server.  Expected application/json and received " + response.getContentType();
+		throw Poco::ApplicationException(error);
+	}
+
+	Poco::DynamicStruct Session::PostMutliPartFormData(std::string resourcePath, Poco::JSON::Object info, std::string filePath, std::string dataPartMediaType)
+	{
+		//This is barely documented anywhere by POCO but you do need an SSL Manager for the request or risk getting odd/difficult to diagnose exceptions.
+		//Note that InitalizeSSL is called in the constructor.
+		Poco::SharedPtr<Poco::Net::InvalidCertificateHandler> ptrHandler = new Poco::Net::AcceptCertificateHandler(false);
+		Poco::Net::Context context(Poco::Net::Context::CLIENT_USE, "", "", "", Poco::Net::Context::VERIFY_RELAXED, 9, false, "ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH");
+		Poco::Net::SSLManager::instance().initializeClient(nullptr, ptrHandler, &context);
+
+		//Create the HTTPSClientSession & initialize the request
+		// Create the request URI.
+		Poco::URI uri(HostUri.toString() + resourcePath);
+		Poco::Net::HTTPSClientSession session(uri.getHost(), uri.getPort(), &context);
+		
+		Poco::Net::HTTPRequest request(Poco::Net::HTTPRequest::HTTP_POST, uri.getPath(), Poco::Net::HTTPMessage::HTTP_1_1);
+		std::string accessToken = GetApiAuthToken();
+
+		//This call creates the bearer token and adds it to the header
+		Poco::Net::OAuth20Credentials(accessToken).authenticate(request);
+
+		//Set 5 minute timeout
+		session.setTimeout(Poco::Timespan(0, 0, 5, 0, 0));
+
+		request.setKeepAlive(true);
+		
+		request.setContentType("application/octet-stream");
+
+		//Stringify Info
+		std::stringstream infoStream;
+		info.stringify(infoStream); 
+
+		//Create Multi-Part Form
+		Poco::Net::HTMLForm form;
+		form.setEncoding(Poco::Net::HTMLForm::ENCODING_MULTIPART);
+		form.set("info", infoStream.str().c_str());
+		form.addPart("data", new Poco::Net::FilePartSource(filePath, dataPartMediaType));
+
+		form.prepareSubmit(request);
+
+		//Send the form
+		form.write(session.sendRequest(request));
+
+
+		// Receive the response.
+		Poco::Net::HTTPResponse response;
+		std::istream& responseStream = session.receiveResponse(response);
+
+		//Do some basic response code checks
+		EnsureAuthorizedStatusCode(response); //This does a status code check along with some other token maintenance (if required)
+
+		if (response.getStatus() == Poco::Net::HTTPResponse::HTTP_NOT_FOUND)
+			throw Poco::ApplicationException("The requested resource was not found.");
+
+		//Parse JSON Response
+		Poco::JSON::Parser parser;
+		Poco::Dynamic::Var result = parser.parse(responseStream);
+
+		if (_stricmp(response.getContentType().c_str(), "application/json") == 0)
+		{
+			Poco::JSON::Object::Ptr pJsonObject = result.extract<Poco::JSON::Object::Ptr>();
+
+			//Todo:  Review - Not really sure if I should return the ptr here or if I should copy to a DynamicStruct
+			//Todo:  The .NET code serializes the json to an object of type T so a dynamic struct may be more in line with this method, but why not just
+			//Todo:  return the json in an object and let the caller do what they will?  DynamicStruct is probably the right answer though
+			if (response.getStatus() == Poco::Net::HTTPResponse::HTTP_OK)
+			{
+				// copy/convert to Poco::DynamicStruct
+				Poco::DynamicStruct ds = *pJsonObject;
+				return ds;
+			}
+
+			throw Poco::ApplicationException(response.getReason(), response.getStatus());
+		}
+
+		std::string error = "Unexpected content type returned from server.  Expected application/json and received " + response.getContentType();
+		throw Poco::ApplicationException(error);
+	}
+
 	/// <summary>
 	/// Gets the API authentication token.
 	/// </summary>
@@ -61,7 +310,7 @@ namespace tethr {
 		{
 			Poco::FastMutex::ScopedLock lock(_mutex);
 			
-			TokenResponse token = GetClientCredentials(_apiUser, _apiPassword);
+			TokenResponse token = GetClientCredentials(ApiUser, ApiPassword);
 			_apiToken = token;
 		}
 
@@ -85,7 +334,7 @@ namespace tethr {
 
 		//Create the HTTPSClientSession & initialize the request
 		// Create the request URI.
-		Poco::URI uri(_hostUri.toString() + "/Token");
+		Poco::URI uri(HostUri.toString() + "/Token");
 		Poco::Net::HTTPSClientSession session(uri.getHost(), uri.getPort(), &context);
 		Poco::Net::HTTPRequest request(Poco::Net::HTTPRequest::HTTP_POST, uri.getPath(), Poco::Net::HTTPMessage::HTTP_1_1);
 
@@ -133,6 +382,27 @@ namespace tethr {
 		std::string error = object->getValue<std::string>("error");
 		throw Poco::ApplicationException(error, response.getStatus());
 	}
+	
+	/// <summary>
+	/// Ensures the authorized status code.
+	/// </summary>
+	/// <param name="response">The HTTPResponse from the call you made</param> 
+	/// <remarks>throws ApplicationException if Unathorized or Forbidden</remarks>
+	void Session::EnsureAuthorizedStatusCode(Poco::Net::HTTPResponse &response)
+	{
+		switch (response.getStatus())
+		{
+		case Poco::Net::HTTPResponse::HTTP_UNAUTHORIZED:
+		{
+			if (ResetAuthTokenOnUnauthorized)
+				ClearAuthToken();
+			throw Poco::ApplicationException("Request returned 401 (Unauthorized)");
+		}
+		case Poco::Net::HTTPResponse::HTTP_FORBIDDEN:
+			throw Poco::ApplicationException("Request returned 403 (Forbidden)");
+		default:;
+		}
+	}
 
 #pragma region Nested Classes
 	Session::TokenResponse::TokenResponse(): ExpiresInSeconds(0)
@@ -166,10 +436,6 @@ namespace tethr {
 		}
 	
 		return false;
-	}
-	std::string Session::TokenResponse::Get(std::string resourcePath)
-	{
-		return std::string();
 	}
 #pragma endregion
 }

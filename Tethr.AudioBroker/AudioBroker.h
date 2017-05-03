@@ -34,5 +34,6 @@ inline CAudioBroker::CAudioBroker()
 #include "ConnectionString.h"
 #include "SendFileResult.h"
 #include "Session.h"
+#include "ArchivedRecording.h"
 
 //Todo: Make XPlatform

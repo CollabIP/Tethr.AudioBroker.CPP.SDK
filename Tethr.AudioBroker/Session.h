@@ -17,21 +17,40 @@
 #include "Poco/Util/JSONConfiguration.h"
 #include "Poco/JSON/Parser.h"
 #include "Poco/URI.h"
+#include "Poco/Net/FilePartSource.h"
+#include "Poco/SingletonHolder.h"
+#include "RecordingInfo.h"
 
 namespace tethr {
+
 	class AUDIOBROKER_API Session
 	{
 	public:
-		//Todo: Not sure if we need to template this or overload for wstring given that this is a customer facing SDK
-		//Todo: that may be used internationally.  String should be fine, but doesn't hurt to refresh platform knowledge
-		Session(std::string hostUri, std::string apiUser, std::string apiPassword);
-		Session(std::string configurationFile);
+		Session();
 		~Session();
+		
+		Poco::URI HostUri;
+		std::string ApiUser;
+		std::string ApiPassword;
+
+		//static Session& getInstance(std::string configurationFile);
+		//static Session& getInstance(std::string hostUri, std::string apiUser, std::string apiPassword);
+
+		bool ResetAuthTokenOnUnauthorized; //When set this will automatically reauthorize the token on the next request if 401 Unauthorized is received
 
 		void ClearAuthToken();
-
-		bool ResetAuthTokenOnUnauthorized = true; //When set this will automatically reauthorize the token on the next request if 401 Unauthorized is received
+		
+		Poco::DynamicStruct Get(std::string resourcePath);
+		void Put(std::string resourcePath, Poco::JSON::Object body); //In the original SDK this is a POST, but cant overload in the same way here.  
+																	 //Using Put as the function name it does not provide a response so might be close to Put equivalent
+		Poco::DynamicStruct Post(std::string resourcePath, Poco::JSON::Object body);
+		Poco::DynamicStruct PostMutliPartFormData(std::string resourcePath, Poco::JSON::Object info, std::string filePath, std::string dataPartMediaType = "application/octet-stream");
 	private:
+
+		//Instance construction for getInstance() -> Singleton
+		//Session(std::string hostUri, std::string apiUser, std::string apiPassword);
+		//Session(std::string configurationFile);
+		
 
 		class TokenResponse
 		{
@@ -48,21 +67,15 @@ namespace tethr {
 			Poco::Timestamp CreatedTimeStamp;
 
 			bool IsValid() const;
-
-			//Todo: Review Object in C# SDK.  May need templating
-			std::string Get(std::string resourcePath);
-			std::string PostMutliPartFormData(std::string resourcePath, object info, std::ostream buffer, std::string dataPartMediaType = "application/octet-stream");
 		};
 
 		Poco::FastMutex  _mutex;
-
-		Poco::URI _hostUri;
-		std::string _apiUser;
-		std::string _apiPassword;
 
 		TokenResponse _apiToken;
 
 		std::string GetApiAuthToken(bool force = false);
 		TokenResponse GetClientCredentials(std::string clientId, std::string clientSecret) const;
+
+		void EnsureAuthorizedStatusCode(Poco::Net::HTTPResponse &response);
 	};
 }

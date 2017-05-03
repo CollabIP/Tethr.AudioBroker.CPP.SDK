@@ -3,9 +3,11 @@
 
 #include "stdafx.h"
 
-SendFileResult SendFile(std::string fileName)
+
+tethr::SendFileResult SendFile(std::string fileName)
 {
 	// Create an Instance of the Archive Recording provider used to send archived audio to Tethr
+	tethr::ArchivedRecording 
 	/*var tethrConnection = new TethrArchivedRecording(_tethrSession);
 
 	// Figure out the file name of the sample file we are going to send to Tethr and read it in.
@@ -45,7 +47,7 @@ SendFileResult SendFile(std::string fileName)
 			};
 		}
 	}*/
-	return SendFileResult();
+	return tethr::SendFileResult();
 }
 
 int main()
@@ -54,19 +56,25 @@ int main()
 	//Create the Session
 	// The Session object should be a singleton, and reused on subsequent sends so that
 	// the oauth bearer token can be reused and refreshed only when it expires
-	tethr::Session session("Configuration.Properties");
+	tethr::Configuration config;
+	tethr::ConnectionString cs = config.LoadConfiguration("Configuration.Properties");
+
+	Poco::SingletonHolder<tethr::Session> session;
+	session.get()->HostUri = cs.HostUri;
+	session.get()->ApiUser = cs.ApiUser;
+	session.get()->ApiPassword = cs.Password;
 
 	//Send the file
 	std::string fileName = "SampleRecording.json";
-	SendFileResult result = SendFile(fileName);
+	tethr::SendFileResult result = SendFile(fileName);
 
 	//Todo: Convert to LocalTime
-	std::string localTime(Poco::DateTimeFormatter::format(result.startTime, "%e %b %Y %H:%M"));
+	std::string localTime(Poco::DateTimeFormatter::format(result.StartTime, "%e %b %Y %H:%M"));
 
 	std::cout << "Sent recording:" << std::endl;
-	std::cout << "Session Id      : " << result.sessionId << std::endl;
+	std::cout << "Session Id      : " << result.SessionId << std::endl;
 	std::cout << "Call Start Time : " << localTime << std::endl;
-	std::cout << "Tethr Call Id   : " << result.callId << std::endl;
+	std::cout << "Tethr Call Id   : " << result.CallId << std::endl;
 
 	std::cout << "Press Enter to Exit";
 	std::cin.ignore();
