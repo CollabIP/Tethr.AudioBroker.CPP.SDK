@@ -1,9 +1,10 @@
 #pragma once
 #include <Poco/Util/PropertyFileConfiguration.h>
 #include "ConnectionString.h"
+#include "AudioBroker.h"
 
-namespace tethr{
-	class Configuration
+namespace tethr {
+	class AUDIOBROKER_API Configuration
 	{
 	public:
 		Configuration();
@@ -11,6 +12,5 @@ namespace tethr{
 
 		static ConnectionString LoadConfiguration(std::string configurationFile);
 	};
-
 }
 

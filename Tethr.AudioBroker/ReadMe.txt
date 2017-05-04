@@ -31,7 +31,9 @@ This SDK should remain compatible with older versions of Visual Studio (2008) fo
 
 Todo: Implement/Review Exception Handling and/or status code responses to callers
 Todo: Add logging and logger injection.
-Todo: Add Async Methods - I'm not sure if POCO has this today.  C++ REST SDK may be the best option, but will required C++11 support
+Todo: Add Async Methods - I'm not sure if POCO has this today.  
+C++ REST SDK may be the best option, but will required C++11 support, but POCO has Tasks (equivalent?)
+
 Todo: Unit Tests!
 
 /////////////////////////////////////////////////////////////////////////////

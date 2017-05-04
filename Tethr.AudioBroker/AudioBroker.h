@@ -29,11 +29,6 @@ inline CAudioBroker::CAudioBroker()
 #include "Poco/Util/PropertyFileConfiguration.h"
 #include "Poco/DateTimeFormatter.h"
 #include "Poco/DateTimeFormat.h"
-
-#include "Configuration.h"
-#include "ConnectionString.h"
-#include "SendFileResult.h"
-#include "Session.h"
-#include "ArchivedRecording.h"
+#include "Poco/Path.h"
 
 //Todo: Make XPlatform

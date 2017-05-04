@@ -275,7 +275,6 @@
     <ClInclude Include="ArchiveCallResponse.h" />
     <ClInclude Include="ArchivedRecording.h" />
     <ClInclude Include="Audio.h" />
-    <ClInclude Include="AudioMediaTypes.h" />
     <ClInclude Include="CallDirection.h" />
     <ClInclude Include="CallStatus.h" />
     <ClInclude Include="Configuration.h" />

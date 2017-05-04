@@ -5,9 +5,10 @@
 #include "Contact.h"
 #include "Audio.h"
 #include "Metadata.h"
+#include "AudioBroker.h"
 
 namespace tethr{
-	class RecordingInfo
+	class AUDIOBROKER_API RecordingInfo
 	{
 	public:
 		RecordingInfo();

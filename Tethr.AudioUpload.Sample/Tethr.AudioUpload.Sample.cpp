@@ -2,53 +2,43 @@
 //
 
 #include "stdafx.h"
-#include "Test.h"
 
 
-tethr::SendFileResult SendFile(tethr::Session session, std::string fileName)
+tethr::SendFileResult SendFile(tethr::Session *session, std::string fileName)
 {
 	// Create an Instance of the Archive Recording provider used to send archived audio to Tethr
-	//tethr::ArchivedRecording tethrConnection(session);
+	tethr::ArchivedRecording tethrConnection;
 
-	/*var tethrConnection = new TethrArchivedRecording(_tethrSession);
+	tethr::RecordingInfo recordingInfo; // = jsonStream.JsonDeserialize<tethr::RecordingInfo>();
+	//Todo: Deserialze json
 
-	// Figure out the file name of the sample file we are going to send to Tethr and read it in.
-	using (var jsonStream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
-	{
-		var recording = jsonStream.JsonDeserialize<RecordingInfo>();
+	// NOTE: Session ID should be something that can be used by other systems to connect a call in Tethr
+	// to the same call in other systems.  The sessionID must be unique per recording.
+	//
+	// For this example, we are appending the time so we can test with the same file multiple times.
+	// but should be a more meaningful value in production.
+	Poco::Timestamp now;
+	std::stringstream id;
+	id << recordingInfo.SessionId << now.epochMicroseconds();
 
-		// NOTE: Session ID should be something that can be used by other systems to connect a call in Tethr
-		// to the same call in other systems.  The sessionID must be unique per recording.
-		//
-		// For this example, we are appending the time so we can test with the same file multiple times.
-		// but should be a more meaningful value in production.
-		recording.SessionId += DateTime.UtcNow.ToString("o");
+	recordingInfo.SessionId = id.str();
+	
+	// NOTE: it is important that the audio length and the reported call length are the same.
+	// If this is not true, Tethr may have harder time accurately detecting what actually happened on a call
+	// By default, Tethr will quarantine calls where the reported time and audio length do not match, and wait for
+	// human interaction to fix any miss configurations.  (Contact Support if you think you need this changed)
+	//
+	// for this example, we are Update the call times, so the calls don't always have the same time.
+	// and if you change out the audio file in the sample, you will have to re-compute the end time in the sample JSON file.
+	Poco::Timespan audioLength = recordingInfo.EndTime() - recordingInfo.StartTime();
+	recordingInfo.StartTime() = Poco::DateTime(); //Now
+	recordingInfo.EndTime() = recordingInfo.StartTime() + audioLength;
 
-		// NOTE: it is important that the audio length and the reported call length are the same.
-		// If this is not true, Tethr may have harder time accurately detecting what actually happened on a call
-		// By default, Tethr will quarantine calls where the reported time and audio length do not match, and wait for
-		// human interaction to fix any miss configurations.  (Contact Support if you think you need this changed)
-		//
-		// for this example, we are Update the call times, so the calls don't always have the same time.
-		// and if you change out the audio file in the sample, you will have to re-compute the end time in the sample JSON file.
-		var audioLength = recording.EndTime - recording.StartTime;
-		recording.StartTime = DateTime.UtcNow;
-		recording.EndTime = recording.StartTime + audioLength;
-
-		// Open the sample wave file.
-		using (var wavStream = new FileStream(Path.ChangeExtension(fileName, ".wav"), FileMode.Open,
-			FileAccess.Read, FileShare.Read))
-		{
-			// Send the audio and metadata to Tethr.
-			var result = await tethrConnection.SendRecordingAsync(recording, wavStream, AudioMediaTypes.Wave);
-			return new SendFileResult
-			{
-				CallId = result.CallId,
-				SessionId = recording.SessionId,
-				StartTime = recording.StartTime
-			};
-		}
-	}*/
+	Poco::Path audioFilePath(fileName);
+	audioFilePath.setExtension("wav");
+	
+	tethr::ArchiveCallResponse result = tethrConnection.SendRecording(session, recordingInfo, audioFilePath.getFileName(), "audio/wav");
+	
 	return tethr::SendFileResult();
 }
 
@@ -58,33 +48,27 @@ int main()
 	//Create the Session
 	// The Session object should be a singleton, and reused on subsequent sends so that
 	// the oauth bearer token can be reused and refreshed only when it expires
-	//tethr::Configuration config;
-	//tethr::ConnectionString cs = config.LoadConfiguration("Configuration.Properties");
+	tethr::Configuration config;
+	tethr::ConnectionString cs = config.LoadConfiguration("Configuration.Properties");  //You can also initialize these directly if you wish
 
 	Poco::SingletonHolder<tethr::Session> _session;
 
-	/*_session.get()->HostUri = cs.HostUri;
+	//The session object required that you set HostUri, ApiUser, and Password.  These can be loaded from a properties file or
+	//you can also initialize these directly.
+	_session.get()->HostUri = cs.HostUri;
 	_session.get()->ApiUser = cs.ApiUser;
-	_session.get()->ApiPassword = cs.Password;*/
+	_session.get()->ApiPassword = cs.Password;
 
 	//Send the file
-	_session.get()->ApiUser = "123";
-	Test *test = new Test(_session.get());
-	std::string u = test->GetApiUser();
+	std::string fileName = "SampleRecording.json";
+	tethr::SendFileResult result = SendFile(_session.get(), fileName);
 	
-
-	//std::string fileName = "SampleRecording.json";
-	//tethr::ArchivedRecording tethrConnection;
-	//tethrConnection.SendRecording(tethr::RecordingInfo(), NULL, NULL);
-	//tethr::SendFileResult result = SendFile(fileName);
-
-	//Todo: Convert to LocalTime
-	//std::string localTime(Poco::DateTimeFormatter::format(result.StartTime, "%e %b %Y %H:%M"));
+	std::string localTime(Poco::DateTimeFormatter::format(result.StartTime, "%e %b %Y %H:%M"));
 
 	std::cout << "Sent recording:" << std::endl;
-	/*std::cout << "Session Id      : " << result.SessionId << std::endl;
+	std::cout << "Session Id      : " << result.SessionId << std::endl;
 	std::cout << "Call Start Time : " << localTime << std::endl;
-	std::cout << "Tethr Call Id   : " << result.CallId << std::endl;*/
+	std::cout << "Tethr Call Id   : " << result.CallId << std::endl;
 
 	std::cout << "Press Enter to Exit";
 	std::cin.ignore();

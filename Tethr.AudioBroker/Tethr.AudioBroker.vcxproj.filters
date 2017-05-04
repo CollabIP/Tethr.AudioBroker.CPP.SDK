@@ -36,9 +36,6 @@
     <ClInclude Include="SendFileResult.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ArchivedRecording.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AudioBroker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -66,7 +63,7 @@
     <ClInclude Include="Metadata.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AudioMediaTypes.h">
+    <ClInclude Include="ArchivedRecording.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -80,10 +77,10 @@
     <ClCompile Include="Configuration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ArchivedRecording.cpp">
+    <ClCompile Include="RecordingInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RecordingInfo.cpp">
+    <ClCompile Include="ArchivedRecording.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

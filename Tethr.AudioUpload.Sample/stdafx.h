@@ -12,3 +12,9 @@
 
 // TODO: reference additional headers your program requires here
 #include "AudioBroker.h"
+#include "Configuration.h"
+#include "ConnectionString.h"
+#include "SendFileResult.h"
+#include "ArchivedRecording.h"
+#include "Session.h"
+

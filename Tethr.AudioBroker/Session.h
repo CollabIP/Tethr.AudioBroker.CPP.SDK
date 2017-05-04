@@ -33,9 +33,6 @@ namespace tethr {
 		std::string ApiUser;
 		std::string ApiPassword;
 
-		//static Session& getInstance(std::string configurationFile);
-		//static Session& getInstance(std::string hostUri, std::string apiUser, std::string apiPassword);
-
 		bool ResetAuthTokenOnUnauthorized; //When set this will automatically reauthorize the token on the next request if 401 Unauthorized is received
 
 		void ClearAuthToken();
@@ -46,12 +43,6 @@ namespace tethr {
 		Poco::DynamicStruct Post(std::string resourcePath, Poco::JSON::Object body);
 		Poco::DynamicStruct PostMutliPartFormData(std::string resourcePath, Poco::JSON::Object info, std::string filePath, std::string dataPartMediaType = "application/octet-stream");
 	private:
-
-		//Instance construction for getInstance() -> Singleton
-		//Session(std::string hostUri, std::string apiUser, std::string apiPassword);
-		//Session(std::string configurationFile);
-		
-
 		class TokenResponse
 		{
 		public:
