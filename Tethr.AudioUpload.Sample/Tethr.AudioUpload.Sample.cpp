@@ -2,12 +2,14 @@
 //
 
 #include "stdafx.h"
+#include "Test.h"
 
 
-tethr::SendFileResult SendFile(std::string fileName)
+tethr::SendFileResult SendFile(tethr::Session session, std::string fileName)
 {
 	// Create an Instance of the Archive Recording provider used to send archived audio to Tethr
-	tethr::ArchivedRecording 
+	//tethr::ArchivedRecording tethrConnection(session);
+
 	/*var tethrConnection = new TethrArchivedRecording(_tethrSession);
 
 	// Figure out the file name of the sample file we are going to send to Tethr and read it in.
@@ -56,25 +58,33 @@ int main()
 	//Create the Session
 	// The Session object should be a singleton, and reused on subsequent sends so that
 	// the oauth bearer token can be reused and refreshed only when it expires
-	tethr::Configuration config;
-	tethr::ConnectionString cs = config.LoadConfiguration("Configuration.Properties");
+	//tethr::Configuration config;
+	//tethr::ConnectionString cs = config.LoadConfiguration("Configuration.Properties");
 
-	Poco::SingletonHolder<tethr::Session> session;
-	session.get()->HostUri = cs.HostUri;
-	session.get()->ApiUser = cs.ApiUser;
-	session.get()->ApiPassword = cs.Password;
+	Poco::SingletonHolder<tethr::Session> _session;
+
+	/*_session.get()->HostUri = cs.HostUri;
+	_session.get()->ApiUser = cs.ApiUser;
+	_session.get()->ApiPassword = cs.Password;*/
 
 	//Send the file
-	std::string fileName = "SampleRecording.json";
-	tethr::SendFileResult result = SendFile(fileName);
+	_session.get()->ApiUser = "123";
+	Test *test = new Test(_session.get());
+	std::string u = test->GetApiUser();
+	
+
+	//std::string fileName = "SampleRecording.json";
+	//tethr::ArchivedRecording tethrConnection;
+	//tethrConnection.SendRecording(tethr::RecordingInfo(), NULL, NULL);
+	//tethr::SendFileResult result = SendFile(fileName);
 
 	//Todo: Convert to LocalTime
-	std::string localTime(Poco::DateTimeFormatter::format(result.StartTime, "%e %b %Y %H:%M"));
+	//std::string localTime(Poco::DateTimeFormatter::format(result.StartTime, "%e %b %Y %H:%M"));
 
 	std::cout << "Sent recording:" << std::endl;
-	std::cout << "Session Id      : " << result.SessionId << std::endl;
+	/*std::cout << "Session Id      : " << result.SessionId << std::endl;
 	std::cout << "Call Start Time : " << localTime << std::endl;
-	std::cout << "Tethr Call Id   : " << result.CallId << std::endl;
+	std::cout << "Tethr Call Id   : " << result.CallId << std::endl;*/
 
 	std::cout << "Press Enter to Exit";
 	std::cin.ignore();

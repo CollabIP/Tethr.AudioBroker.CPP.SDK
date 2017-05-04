@@ -16,7 +16,7 @@ namespace tethr {
 	/// Instances this instance as a Singleton
 	/// </summary>
 	/// <returns></returns>
-	static Session& instance(std::string hostUri, std::string apiUser, std::string apiPassword)
+	static Session& instance()
 	{
 		static Poco::SingletonHolder<Session> singletonHolder;
 		return *singletonHolder.get();
