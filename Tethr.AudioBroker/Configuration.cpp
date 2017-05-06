@@ -13,13 +13,12 @@ namespace tethr {
 
 	ConnectionString Configuration::LoadConfiguration(std::string configurationFile)
 	{
-		Poco::AutoPtr<Poco::Util::PropertyFileConfiguration> pConf;
-		pConf = new Poco::Util::PropertyFileConfiguration(configurationFile);
+		Poco::AutoPtr<Poco::Util::PropertyFileConfiguration> pConfiguration = new Poco::Util::PropertyFileConfiguration(configurationFile);
 
 		ConnectionString connectionString;
-		connectionString.HostUri = pConf->getString("Uri");
-		connectionString.ApiUser = pConf->getString("ApiUser");
-		connectionString.Password = pConf->getString("Password");
+		connectionString.HostUri = pConfiguration->getString("Uri");
+		connectionString.ApiUser = pConfiguration->getString("ApiUser");
+		connectionString.Password = pConfiguration->getString("Password");
 
 		return connectionString;
 	}

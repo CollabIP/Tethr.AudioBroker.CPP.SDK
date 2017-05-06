@@ -10,11 +10,18 @@ namespace tethr
 	class AUDIOBROKER_API ArchivedRecording
 	{
 	public:
-		ArchivedRecording();
+		ArchivedRecording(Session *session);
 		~ArchivedRecording();
 
-		ArchiveCallResponse SendRecording(tethr::Session *session, tethr::RecordingInfo info, std::string fileName, std::string mediaType);
-		SessionStatus GetRecordingStatus(tethr::Session *session, std::string sessionId);
-		std::vector<CallStatus> GetRecordingStatuses(tethr::Session *session, std::vector<std::string> sessionIds);
+		Session * _session;
+
+		//Todo: - Review I changed the signature of this method to make it easier for the caller as serializing/deserializng json to an object is
+		//Todo: - not as easy as it is in .NET
+		ArchiveCallResponse SendRecording(std::string jsonFileName, std::string audioFileName, std::string mediaType);
+		SessionStatus GetRecordingStatus(std::string sessionId);
+		std::vector<SessionStatus> GetRecordingStatus(std::vector<std::string> sessionIds);
+
+	private:
+		Poco::JSON::Object::Ptr SetAudioFormat(std::string jsonFileName, std::string mediaType);
 	};
 }

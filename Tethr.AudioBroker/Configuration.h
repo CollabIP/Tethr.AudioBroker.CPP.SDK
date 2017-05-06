@@ -4,7 +4,7 @@
 #include "AudioBroker.h"
 
 namespace tethr {
-	class AUDIOBROKER_API Configuration
+	class AUDIOBROKER_API Configuration 
 	{
 	public:
 		Configuration();

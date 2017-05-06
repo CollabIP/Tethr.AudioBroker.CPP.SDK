@@ -9,7 +9,9 @@
 #include "Poco/Net/HTTPSClientSession.h"
 #include "Poco/Net/InvalidCertificateHandler.h"
 #include "Poco/Net/SSLManager.h"
+#include "Poco/Net/SSLException.h"
 #include "Poco/Net/AcceptCertificateHandler.h"
+#include "Poco/Net/KeyConsoleHandler.h"
 #include "Poco/Net/HTTPRequest.h"
 #include "Poco/Net/HTTPResponse.h"
 #include "Poco/Net/HTMLForm.h"
@@ -20,6 +22,7 @@
 #include "Poco/Net/FilePartSource.h"
 #include "Poco/SingletonHolder.h"
 #include "RecordingInfo.h"
+#include "Token.h"
 
 namespace tethr {
 
@@ -36,37 +39,24 @@ namespace tethr {
 		bool ResetAuthTokenOnUnauthorized; //When set this will automatically reauthorize the token on the next request if 401 Unauthorized is received
 
 		void ClearAuthToken();
+		std::string GetApiAuthToken(bool force = true);
 		
-		Poco::DynamicStruct Get(std::string resourcePath);
-		void Put(std::string resourcePath, Poco::JSON::Object body); //In the original SDK this is a POST, but cant overload in the same way here.  
-																	 //Using Put as the function name it does not provide a response so might be close to Put equivalent
-		Poco::DynamicStruct Post(std::string resourcePath, Poco::JSON::Object body);
+		std::string Get(std::string resourcePath);
+		void Put(std::string resourcePath, Poco::JSON::Object::Ptr body); //In the original SDK this is a POST, but cant overload in the same way here.  								 //Using Put as the function name it does not provide a response so might be close to Put equivalent
+		std::string Post(std::string resourcePath, Poco::JSON::Object::Ptr body);
 		Poco::DynamicStruct PostMutliPartFormData(std::string resourcePath, Poco::JSON::Object info, std::string filePath, std::string dataPartMediaType = "application/octet-stream");
 	private:
-		class TokenResponse
-		{
-		public:
-			TokenResponse();
-			~TokenResponse();
 
-			// leaving access token as a string as there is no security gained from anything else and only 
-			// slows down the calls.  In normal use cases this is used often for the lifetime of the Token, 
-			// meaning that string is in clear text the entire time it's valid anyway.
-			std::string AccessToken;
-			std::string TokenType;
-			long ExpiresInSeconds;
-			Poco::Timestamp CreatedTimeStamp;
+		Poco::SharedPtr<Poco::Net::PrivateKeyPassphraseHandler> pConsoleHandler;
+		Poco::SharedPtr<Poco::Net::InvalidCertificateHandler> m_pCertificateHandler;
+		Poco::Net::Context::Ptr m_pContext;
 
-			bool IsValid() const;
-		};
+		std::string m_apiToken;
 
 		Poco::FastMutex  _mutex;
 
-		TokenResponse _apiToken;
-
-		std::string GetApiAuthToken(bool force = false);
-		TokenResponse GetClientCredentials(std::string clientId, std::string clientSecret) const;
-
+		Token _apiToken;
+		Token GetClientCredentials();
 		void EnsureAuthorizedStatusCode(Poco::Net::HTTPResponse &response);
 	};
 }

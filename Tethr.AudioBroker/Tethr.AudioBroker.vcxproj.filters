@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Models">
+      <UniqueIdentifier>{fad25087-545a-4623-a280-c82884da865e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Models">
+      <UniqueIdentifier>{d256aee5-026e-43f2-ba36-de4a512f4e8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Enumerations">
+      <UniqueIdentifier>{88fedcd3-3088-4595-9bdc-d9c16ffcb97c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -42,15 +51,6 @@
     <ClInclude Include="ArchiveCallResponse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CallStatus.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SessionStatus.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RecordingInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CallDirection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -66,6 +66,18 @@
     <ClInclude Include="ArchivedRecording.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Token.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionStatus.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="CallStatus.h">
+      <Filter>Header Files\Enumerations</Filter>
+    </ClInclude>
+    <ClInclude Include="RecordingInfo.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Session.cpp">
@@ -77,11 +89,14 @@
     <ClCompile Include="Configuration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RecordingInfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ArchivedRecording.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Token.cpp">
+      <Filter>Source Files\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="RecordingInfo.cpp">
+      <Filter>Source Files\Models</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

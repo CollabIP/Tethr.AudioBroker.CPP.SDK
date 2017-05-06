@@ -288,6 +288,7 @@
     <ClInclude Include="Session.h" />
     <ClInclude Include="AudioBroker.h" />
     <ClInclude Include="SessionStatus.h" />
+    <ClInclude Include="Token.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ArchivedRecording.cpp" />
@@ -295,6 +296,7 @@
     <ClCompile Include="RecordingInfo.cpp" />
     <ClCompile Include="RecordingSettings.cpp" />
     <ClCompile Include="Session.cpp" />
+    <ClCompile Include="Token.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
