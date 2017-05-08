@@ -49,13 +49,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_static_md_100_unicode|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v100</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_static_mt_100_unicode|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v100</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -162,8 +162,8 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TETHRAUDIOBROKER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Source\GitHub\POCO-Binaries\1.7.8\Crypto\include;C:\Source\GitHub\POCO-Binaries\1.7.8\OpenSSL-Win32\include;C:\Source\GitHub\POCO-Binaries\1.7.8\Util\include;C:\Source\GitHub\POCO-Binaries\1.7.8\Net\include;C:\Source\GitHub\POCO-Binaries\1.7.8\NetSSL_OpenSSL\include;C:\Source\GitHub\POCO-Binaries\1.7.8\JSON\include;C:\Source\GitHub\POCO-Binaries\1.7.8\Foundation\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;AUDIOBROKER_EXPORTS;AUDIOBROKER_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\OpenSSL-Win32\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -184,8 +184,9 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TETHRAUDIOBROKER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Source\GitHub\POCO-Binaries\1.7.8\Crypto\include;C:\Source\GitHub\POCO-Binaries\1.7.8\OpenSSL-Win32\include;C:\Source\GitHub\POCO-Binaries\1.7.8\Util\include;C:\Source\GitHub\POCO-Binaries\1.7.8\Net\include;C:\Source\GitHub\POCO-Binaries\1.7.8\NetSSL_OpenSSL\include;C:\Source\GitHub\POCO-Binaries\1.7.8\JSON\include;C:\Source\GitHub\POCO-Binaries\1.7.8\Foundation\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;POCO_STATIC;AUDIOBROKER_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\OpenSSL-Win32\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

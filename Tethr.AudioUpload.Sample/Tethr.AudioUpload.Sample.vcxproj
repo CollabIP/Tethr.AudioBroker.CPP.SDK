@@ -57,7 +57,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_static_mt_100_unicode|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_shared_100_unicode|Win32'" Label="Configuration">
@@ -159,12 +159,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Tethr.AudioBroker;C:\Source\GitHub\POCO-Binaries\1.7.8\Util\include;C:\Source\GitHub\POCO-Binaries\1.7.8\Net\include;C:\Source\GitHub\POCO-Binaries\1.7.8\NetSSL_OpenSSL\include;C:\Source\GitHub\POCO-Binaries\1.7.8\JSON\include;C:\Source\GitHub\POCO-Binaries\1.7.8\Crypto\include;C:\Source\GitHub\POCO-Binaries\1.7.8\OpenSSL-Win32\include;C:\Source\GitHub\POCO-Binaries\1.7.8\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Tethr.AudioBroker;$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\OpenSSL-Win32\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>C:\Source\GitHub\Tethr.AudioBroker.CPP.SDK\Tethr.AudioBroker\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\Util\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\Net\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\NetSSL_OpenSSL\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\Crypto\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\JSON\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\Foundation\bin\Win32\debug_shared_100_unicode;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Tethr.AudioBroker\bin\Win32\debug_shared_100_unicode;$(SolutionDir)Dependencies\Util\bin\Win32\debug_shared_100_unicode;$(SolutionDir)Dependencies\Net\bin\Win32\debug_shared_100_unicode;$(SolutionDir)Dependencies\NetSSL_OpenSSL\bin\Win32\debug_shared_100_unicode;$(SolutionDir)Dependencies\Crypto\bin\Win32\debug_shared_100_unicode;$(SolutionDir)Dependencies\JSON\bin\Win32\debug_shared_100_unicode;$(SolutionDir)Dependencies\Foundation\bin\Win32\debug_shared_100_unicode;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).lib</ImportLibrary>
       <AdditionalDependencies>Tethr.AudioBroker.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -176,15 +176,16 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Tethr.AudioBroker;C:\Source\GitHub\POCO-Binaries\1.7.8\Util\include;C:\Source\GitHub\POCO-Binaries\1.7.8\Net\include;C:\Source\GitHub\POCO-Binaries\1.7.8\NetSSL_OpenSSL\include;C:\Source\GitHub\POCO-Binaries\1.7.8\JSON\include;C:\Source\GitHub\POCO-Binaries\1.7.8\Crypto\include;C:\Source\GitHub\POCO-Binaries\1.7.8\OpenSSL-Win32\include;C:\Source\GitHub\POCO-Binaries\1.7.8\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;POCO_STATIC;AUDIOBROKER_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Tethr.AudioBroker;$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\OpenSSL-Win32\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>C:\Source\GitHub\Tethr.AudioBroker.CPP.SDK\Tethr.AudioBroker\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\Util\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\Net\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\NetSSL_OpenSSL\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\Crypto\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\JSON\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\Foundation\bin\Win32\debug_shared_100_unicode;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Tethr.AudioBroker\bin\Win32\debug_static_md_100_unicode;$(SolutionDir)Dependencies\Util\bin\Win32\debug_static_md_100_unicode;$(SolutionDir)Dependencies\Net\bin\Win32\debug_static_md_100_unicode;$(SolutionDir)Dependencies\NetSSL_OpenSSL\bin\Win32\debug_static_md_100_unicode;$(SolutionDir)Dependencies\Crypto\bin\Win32\debug_static_md_100_unicode;$(SolutionDir)Dependencies\JSON\bin\Win32\debug_static_md_100_unicode;$(SolutionDir)Dependencies\Foundation\bin\Win32\debug_static_md_100_unicode;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).lib</ImportLibrary>
+      <AdditionalDependencies>Tethr.AudioBroker.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_static_mt_100_unicode|Win32'">
@@ -193,15 +194,16 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Tethr.AudioBroker;C:\Source\GitHub\POCO-Binaries\1.7.8\Util\include;C:\Source\GitHub\POCO-Binaries\1.7.8\Net\include;C:\Source\GitHub\POCO-Binaries\1.7.8\NetSSL_OpenSSL\include;C:\Source\GitHub\POCO-Binaries\1.7.8\JSON\include;C:\Source\GitHub\POCO-Binaries\1.7.8\Crypto\include;C:\Source\GitHub\POCO-Binaries\1.7.8\OpenSSL-Win32\include;C:\Source\GitHub\POCO-Binaries\1.7.8\Foundation\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;POCO_STATIC;AUDIOBROKER_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Tethr.AudioBroker;$(SolutionDir)Dependencies\OpenSSL-Win32\include;$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include;$(SolutionDir)Dependencies\XML\include</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>C:\Source\GitHub\Tethr.AudioBroker.CPP.SDK\Tethr.AudioBroker\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\Util\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\Net\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\NetSSL_OpenSSL\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\Crypto\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\JSON\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\Foundation\bin\Win32\debug_shared_100_unicode;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Tethr.AudioBroker\bin\Win32\debug_static_mt_100_unicode;$(SolutionDir)Dependencies\OpenSSL-Win32\lib;$(SolutionDir)Dependencies\OpenSSL-Win32\lib\VC\static;$(SolutionDir)Dependencies\Util\bin\Win32\debug_static_mt_100_unicode;$(SolutionDir)Dependencies\Net\bin\Win32\debug_static_mt_100_unicode;$(SolutionDir)Dependencies\NetSSL_OpenSSL\bin\Win32\debug_static_mt_100_unicode;$(SolutionDir)Dependencies\Crypto\bin\Win32\debug_static_mt_100_unicode;$(SolutionDir)Dependencies\JSON\bin\Win32\debug_static_mt_100_unicode;$(SolutionDir)Dependencies\Foundation\bin\Win32\debug_static_mt_100_unicode;$(SolutionDir)Dependencies\XML\bin\Win32\debug_static_mt_100_unicode;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ImportLibrary>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).lib</ImportLibrary>
+      <AdditionalDependencies>Tethr.AudioBroker.lib;libeay32MTd.lib;ssleay32MTd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_shared_100_unicode|x64'">
