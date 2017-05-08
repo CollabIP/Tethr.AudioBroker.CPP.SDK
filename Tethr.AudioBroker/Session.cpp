@@ -206,7 +206,15 @@ namespace tethr {
 		std::string error = "Unexpected content type returned from server.  Expected (application/json; charset=utf-8) and received " + response.getContentType();
 		throw Poco::ApplicationException(error);
 	}
-
+	
+	/// <summary>
+	/// Posts the mutli part form data.
+	/// </summary>
+	/// <param name="resourcePath">The resource path.</param>
+	/// <param name="recordingInfo">The recording information.</param>
+	/// <param name="filePath">The file path.</param>
+	/// <param name="dataPartMediaType">Type of the data part media.</param>
+	/// <returns>json string</returns>
 	std::string Session::PostMutliPartFormData(std::string resourcePath, Poco::JSON::Object::Ptr recordingInfo, std::string filePath, std::string dataPartMediaType)
 	{
 		std::string accessToken = GetApiAuthToken();
@@ -215,7 +223,7 @@ namespace tethr {
 		Poco::URI uri(HostUri.toString() + resourcePath);
 		Poco::Net::HTTPSClientSession session(uri.getHost(), uri.getPort());
 		session.setTimeout(Poco::Timespan(0, 0, 5, 0, 0)); //Set 5 minute timeout - Todo: - Review is this long enough?
-		session.setProxy("localhost", 8888);  //Enable this to send to local fiddler proxy
+		//session.setProxy("localhost", 8888);  //Enable this to send to local fiddler proxy
 
 		Poco::Net::HTTPRequest request(Poco::Net::HTTPRequest::HTTP_POST, uri.getPath(), Poco::Net::HTTPMessage::HTTP_1_1);
 		request.setTransferEncoding("IDENTITY_TRANSFER_CODING");
