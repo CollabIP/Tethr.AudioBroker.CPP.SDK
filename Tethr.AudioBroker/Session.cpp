@@ -71,7 +71,7 @@ namespace tethr {
 		//Create the HTTPSClientSession & initialize the request
 		Poco::URI uri(HostUri.toString() + resourcePath);
 		Poco::Net::HTTPSClientSession session(uri.getHost(), uri.getPort());
-		Poco::Net::HTTPRequest request(Poco::Net::HTTPRequest::HTTP_POST, uri.getPath(), Poco::Net::HTTPMessage::HTTP_1_1);
+		Poco::Net::HTTPRequest request(Poco::Net::HTTPRequest::HTTP_GET, uri.getPath(), Poco::Net::HTTPMessage::HTTP_1_1);
 
 		//This call creates the bearer token and adds it to the header
 		Poco::Net::OAuth20Credentials(accessToken).authenticate(request);
@@ -93,7 +93,7 @@ namespace tethr {
 		Poco::JSON::Parser parser;
 		Poco::Dynamic::Var result = parser.parse(responseStream);
 
-		if (_stricmp(response.getContentType().c_str(), "application/json") == 0)
+		if (_stricmp(response.getContentType().c_str(), "application/json; charset=utf-8") == 0)
 		{
 			//Todo: Review - Just returning the json string here.  I could return a more complex object, but seems cleaner to
 			//Todo: just to return the string as is and let the caller parse the data.
@@ -206,37 +206,41 @@ namespace tethr {
 		throw Poco::ApplicationException(error);
 	}
 
-	Poco::DynamicStruct Session::PostMutliPartFormData(std::string resourcePath, Poco::JSON::Object info, std::string filePath, std::string dataPartMediaType)
+	std::string Session::PostMutliPartFormData(std::string resourcePath, Poco::JSON::Object::Ptr recordingInfo, std::string filePath, std::string dataPartMediaType)
 	{
 		std::string accessToken = GetApiAuthToken();
 
 		//Create the HTTPSClientSession & initialize the request
 		Poco::URI uri(HostUri.toString() + resourcePath);
 		Poco::Net::HTTPSClientSession session(uri.getHost(), uri.getPort());
-		Poco::Net::HTTPRequest request(Poco::Net::HTTPRequest::HTTP_POST, uri.getPath(), Poco::Net::HTTPMessage::HTTP_1_1);
+		session.setTimeout(Poco::Timespan(0, 0, 5, 0, 0)); //Set 5 minute timeout - Todo: - Review is this long enough?
+		session.setProxy("localhost", 8888);  //Enable this to send to local fiddler proxy
 
+		Poco::Net::HTTPRequest request(Poco::Net::HTTPRequest::HTTP_POST, uri.getPath(), Poco::Net::HTTPMessage::HTTP_1_1);
+		request.setTransferEncoding("IDENTITY_TRANSFER_CODING");
+		
 		//This call creates the bearer token and adds it to the header
 		Poco::Net::OAuth20Credentials(accessToken).authenticate(request);
 
-		//Set 5 minute timeout - Todo: - Review is this long enough?
-		session.setTimeout(Poco::Timespan(0, 0, 5, 0, 0));
-		request.setKeepAlive(true);
-		request.setContentType("application/octet-stream");
-
-		//Stringify Info
-		std::stringstream infoStream;
-		info.stringify(infoStream); 
-
 		//Create Multi-Part Form
+		std::stringstream infoStream;
+		recordingInfo->stringify(infoStream);
+
 		Poco::Net::HTMLForm form;
 		form.setEncoding(Poco::Net::HTMLForm::ENCODING_MULTIPART);
-		form.set("info", infoStream.str().c_str());
-		form.addPart("data", new Poco::Net::FilePartSource(filePath, dataPartMediaType));
-
+		form.addPart("info", new Poco::Net::StringPartSource(infoStream.str(), "application/json; charset=utf-8"));
+		form.addPart("data", new Poco::Net::FilePartSource(filePath, "audio/wav"));
+		
 		form.prepareSubmit(request);
 
+		std::streamsize contentLength = form.calculateContentLength();
+		request.setContentLength(contentLength);
+
 		//Send the form
-		form.write(session.sendRequest(request));
+		std::ostream& requestStream = session.sendRequest(request);
+		form.write(requestStream);
+		
+		//form.write(session.sendRequest(request));
 
 		// Receive the response.
 		Poco::Net::HTTPResponse response;
@@ -252,18 +256,11 @@ namespace tethr {
 		Poco::JSON::Parser parser;
 		Poco::Dynamic::Var result = parser.parse(responseStream);
 
-		if (_stricmp(response.getContentType().c_str(), "application/json") == 0)
+		if (_stricmp(response.getContentType().c_str(), "application/json; charset=utf-8") == 0)
 		{
-			Poco::JSON::Object::Ptr pJsonObject = result.extract<Poco::JSON::Object::Ptr>();
-
-			//Todo:  Review - Not really sure if I should return the ptr here or if I should copy to a DynamicStruct
-			//Todo:  The .NET code serializes the json to an object of type T so a dynamic struct may be more in line with this method, but why not just
-			//Todo:  return the json in an object and let the caller do what they will?  DynamicStruct is probably the right answer though
 			if (response.getStatus() == Poco::Net::HTTPResponse::HTTP_OK)
 			{
-				// copy/convert to Poco::DynamicStruct
-				Poco::DynamicStruct ds = *pJsonObject;
-				return ds;
+				return result.toString();
 			}
 
 			throw Poco::ApplicationException(response.getReason(), response.getStatus());

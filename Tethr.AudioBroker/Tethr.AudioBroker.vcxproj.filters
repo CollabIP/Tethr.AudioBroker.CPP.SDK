@@ -33,34 +33,10 @@
     <ClInclude Include="RecordingSettings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RecordingSettingSummary.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Configuration.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ConnectionString.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SendFileResult.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AudioBroker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ArchiveCallResponse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CallDirection.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Contact.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Metadata.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ArchivedRecording.h">
@@ -75,7 +51,19 @@
     <ClInclude Include="CallStatus.h">
       <Filter>Header Files\Enumerations</Filter>
     </ClInclude>
-    <ClInclude Include="RecordingInfo.h">
+    <ClInclude Include="CallDirection.h">
+      <Filter>Header Files\Enumerations</Filter>
+    </ClInclude>
+    <ClInclude Include="ConnectionString.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="ArchiveCallResponse.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="SendFileResult.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="RecordingSettingSummary.h">
       <Filter>Header Files\Models</Filter>
     </ClInclude>
   </ItemGroup>
@@ -93,9 +81,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Token.cpp">
-      <Filter>Source Files\Models</Filter>
-    </ClCompile>
-    <ClCompile Include="RecordingInfo.cpp">
       <Filter>Source Files\Models</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,7 +1,6 @@
 #pragma once
-#include <string>
 
-namespace tethr {
+namespace tethr{
 	struct ArchiveCallResponse
 	{
 		std::string CallId;

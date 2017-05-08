@@ -15,21 +15,24 @@ namespace tethr
 	ArchiveCallResponse ArchivedRecording::SendRecording(std::string jsonFileName, std::string audioFileName, std::string mediaType)
 	{
 		// Setting the Audio Format to make sure it matches the media type, RecordingInfo.Audio will be obsoleted at some point in favor of only looking at the media type.
-		Poco::JSON::Object::Ptr jsonObject = SetAudioFormat(jsonFileName);
+		Poco::JSON::Object::Ptr jsonObject = SetAudioFormat(jsonFileName, mediaType);
 
+		std::string result = _session->PostMutliPartFormData("/callCapture/v1/archive", jsonObject, audioFileName, mediaType);
+
+		//Parse JSON
+		Poco::JSON::Parser parser;
+		Poco::Dynamic::Var jsonParseResult = parser.parse(result);
 		
+		//Create JSON object Pointer
+		Poco::JSON::Object::Ptr archiveResult = jsonParseResult.extract<Poco::JSON::Object::Ptr>();
 
-		Poco::JSON::Object recordingInfo;
+		//Get callSessions Object
+		Poco::Dynamic::Var callId = archiveResult->get("callId");
 
-		Poco::DynamicStruct result = _session.PostMutliPartFormData("/callCapture/v1/archive", recordingInfo, fileName, mediaType);
+		ArchiveCallResponse callResponse;
+		callResponse.CallId = callId.convert<std::string>();
 
-
-		return ArchiveCallResponse();
-	}
-
-	tethr::ArchiveCallResponse ArchivedRecording::SendRecording(std::string jsonFileName, std::string audioFileName, std::string mediaType)
-	{
-
+		return callResponse;
 	}
 
 	SessionStatus ArchivedRecording::GetRecordingStatus(std::string sessionId)
@@ -193,8 +196,11 @@ namespace tethr
 		Poco::JSON::Parser parser;
 		Poco::Dynamic::Var jsonParseResult = parser.parse(jsonStream.str());
 
+		Poco::JSON::Object::Ptr audioFormatObj = new Poco::JSON::Object();
+		
 		//Create JSON object Pointer
 		Poco::JSON::Object::Ptr jsonObject = jsonParseResult.extract<Poco::JSON::Object::Ptr>();
+		
 		if (_stricmp(mediaType.c_str(), "audio/x-wav") == 0 ||
 			_stricmp(mediaType.c_str(), "audio/wave") == 0 ||
 			_stricmp(mediaType.c_str(), "audio/vnd.wav") == 0 ||
@@ -203,23 +209,28 @@ namespace tethr
 		{
 			// Setting the audio value as some instance of Tethr may still be looking for this.
 			// Will be removed from SDK, once it is fully removed from Tethr servers.
-			//info.Audio.Format = "wav";
+			audioFormatObj->set("Format", "wav");
+			jsonObject->set("Audio", audioFormatObj);
 
 			// Set the media type to the one used by default in Tethr.
 			mediaType = "audio/wav";
 		}
 		else if (_stricmp(mediaType.c_str(), "audio/mp3") == 0)
 		{
-			//info.Audio.Format = "mp3";
+			audioFormatObj->set("Format", "mp3");
+			jsonObject->set("Audio", audioFormatObj);
 		}
 		else if (_stricmp(mediaType.c_str(), "audio/ogg") == 0)
 		{
-			//info.Audio.Format = "opus";
+			audioFormatObj->set("Format", "opus");
+			jsonObject->set("Audio", audioFormatObj);
 		}
 		else
 		{
 			//Check the file type is wav, If they are not attaching a file, we only support Wav files.
 			throw Poco::ApplicationException("Only Wav, MP3, or OPUS files are supported files.");
 		}
+
+		return jsonObject;
 	}
 }

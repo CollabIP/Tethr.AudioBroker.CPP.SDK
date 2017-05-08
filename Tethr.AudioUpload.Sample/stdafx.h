@@ -16,6 +16,8 @@
 #include "ConnectionString.h"
 #include "SendFileResult.h"
 #include "ArchivedRecording.h"
+#include "RecordingSettings.h"
+#include "RecordingSettingSummary.h"
 #include "SessionStatus.h"
 #include "Session.h"
 

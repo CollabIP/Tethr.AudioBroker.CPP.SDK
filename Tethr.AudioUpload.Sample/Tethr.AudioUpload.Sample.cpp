@@ -5,63 +5,13 @@
 
 Poco::SingletonHolder<tethr::Session> _session;
 
-tethr::RecordingInfo ParseJson(std::string fileName)
+
+std::vector<tethr::RecordingSettingSummary> GetRecordingSummaries()
 {
-	//We need to load the data into a recordingInfo object
-	//Todo: Review.  Why dont we just set the audio format in the metadata that is passed to tethr? 
-	//Todo: It would save a lot of parsing.
+	tethr::RecordingSettings tethrConnection(_session.get());
 
-	//Load Json from the file using JsonConfiguration
-	Poco::Util::JSONConfiguration json(fileName);
-	std::stringstream jsonStream;
-	json.save(jsonStream);  //Save the json to a stringstream
+	return tethrConnection.GetRecordingSessionSummaries();
 
-	//Setup JSON Parsing
-	Poco::JSON::Parser parser;
-	Poco::Dynamic::Var jsonParseResult = parser.parse(jsonStream.str());
-
-	//Create JSON object Pointer
-	Poco::JSON::Object::Ptr jsonObject = jsonParseResult.extract<Poco::JSON::Object::Ptr>();
-
-	//Create RecordingInfo
-	tethr::RecordingInfo recordingInfo;
-	recordingInfo.SessionId = jsonObject->get("sessionId").toString();
-	recordingInfo.MasterCallId = jsonObject->get("masterCallId").toString();
-	recordingInfo.NumberDialed = jsonObject->get("numberDialed").toString();
-
-	std::string callDirection = jsonObject->get("direction").toString();
-	if (_stricmp(callDirection.c_str(), "Outbound") == 0)
-	{
-		recordingInfo.Direction = tethr::Outbound;
-	}
-	else if (_stricmp(callDirection.c_str(), "Inbound") == 0)
-	{
-		recordingInfo.Direction = tethr::Inbound;
-	}
-	else if (_stricmp(callDirection.c_str(), "Internal") == 0)
-	{
-		recordingInfo.Direction = tethr::Internal;
-	}
-	else
-	{
-		recordingInfo.Direction = tethr::Unknown;
-	}
-
-	//Get Metadata Object
-	Poco::Dynamic::Var metadata = jsonObject->get("metadata");
-	Poco::JSON::Object::Ptr metadataObject = metadata.extract<Poco::JSON::Object::Ptr>();
-
-	/*for (Poco::JSON::Object::ConstIterator it = metadataObject->begin(), end = metadataObject->end(); it != end; ++it)
-	{
-		std::string key = it->first;
-		std::string value = it->second;
-		recordingInfo.Metadata.Data.insert(key, value);
-	}*/
-
-
-	std::string mdata = metadataObject->get("CallIndex").toString();
-
-	return recordingInfo;
 }
 
 tethr::SessionStatus GetRecordingStatus(std::string sessionId)
@@ -90,38 +40,40 @@ tethr::SendFileResult SendFile(std::string jsonFileName)
 	//
 	// For this example, we are appending the time so we can test with the same file multiple times.
 	// but should be a more meaningful value in production.
-	/*Poco::Timestamp now;
-	std::stringstream id;
-	id << recordingInfo.SessionId << now.epochMicroseconds();*/
+	Poco::Util::JSONConfiguration json(jsonFileName);
+	std::stringstream jsonStream;
 
-	//recordingInfo.SessionId = id.str();
-	
-	// NOTE: it is important that the audio length and the reported call length are the same.
-	// If this is not true, Tethr may have harder time accurately detecting what actually happened on a call
-	// By default, Tethr will quarantine calls where the reported time and audio length do not match, and wait for
-	// human interaction to fix any miss configurations.  (Contact Support if you think you need this changed)
-	//
-	// for this example, we are Update the call times, so the calls don't always have the same time.
-	// and if you change out the audio file in the sample, you will have to re-compute the end time in the sample JSON file.
-	
-	//"startTime" : "2016-08-30T18:43:34.5565965Z",
-	//"endTime" : "2016-08-30T18:44:32.62859Z"
+	Poco::Timestamp now;
+	std::stringstream sessionId;
+	sessionId << now.utcTime();
 
-	/*Poco::Timespan audioLength = recordingInfo.EndTime() - recordingInfo.StartTime();
-	recordingInfo.StartTime() = Poco::DateTime(); //Now
-	recordingInfo.EndTime() = recordingInfo.StartTime() + audioLength;*/
+	json.setString("sessionId", sessionId.str());
+	json.save(jsonStream);  //Save the json to a stringstream
+
+	Poco::JSON::Parser parser;
+	Poco::Dynamic::Var jsonParseResult = parser.parse(jsonStream.str());
+
+	//Create JSON object Pointer
+	Poco::JSON::Object::Ptr jsonObject = jsonParseResult.extract<Poco::JSON::Object::Ptr>();
+
+	Poco::FileOutputStream sampleRecording("SampleRecording.json");
+	jsonObject->stringify(sampleRecording);
+	sampleRecording.close();
 
 	Poco::Path audioFilePath(jsonFileName);
 	audioFilePath.setExtension("wav");
 	
-	tethr::ArchiveCallResponse result = tethrConnection.SendRecording(recordingInfo, audioFilePath.getFileName(), "audio/wav");
-	
-	return tethr::SendFileResult();
+	tethr::ArchiveCallResponse result = tethrConnection.SendRecording(jsonFileName, audioFilePath.getFileName(), "audio/wav");
+
+	tethr::SendFileResult fileResult;
+	fileResult.CallId = result.CallId;
+	fileResult.SessionId = sessionId.str();
+
+	return fileResult;
 }
 
 int main()
 {
-	
 	//Create the Session
 	// The Session object should be a singleton, and reused on subsequent sends so that
 	// the oauth bearer token can be reused and refreshed only when it expires
@@ -138,17 +90,19 @@ int main()
 	_session.get()->ApiUser = cs.ApiUser;
 	_session.get()->ApiPassword = cs.Password;
 
-	//Get Recording Status Example 
-	std::string sessionId = "95d8dd76-f975-482e-9cd3-29b3ffeff09a";
-	tethr::SessionStatus sessionStatus = GetRecordingStatus(sessionId);
+	//API Examples - Uncomment to execute
+	//1. Get RecordingSummaries Example
+	//std::vector<tethr::RecordingSettingSummary> recordingSettingSummaries = GetRecordingSummaries();
 
-	//Get Recording Statuses Example
-	std::vector<std::string> sessionIds;
-	sessionIds.push_back("95d8dd76-f975-482e-9cd3-29b3ffeff09a");
-	sessionIds.push_back("8c7287d9-9098-44c5-9662-4650c12d02cb");
+	//2. Get Recording Status Example 
+	//std::string sessionId = "95d8dd76-f975-482e-9cd3-29b3ffeff09a";
+	//tethr::SessionStatus sessionStatus = GetRecordingStatus(sessionId);
 
-	//Todo: shouldn't we be able to lookup by call id as well?
-	std::vector<tethr::SessionStatus> sessionStatuses = GetRecordingStatus(sessionIds);
+	//3. Get Recording Statuses Example
+	//std::vector<std::string> sessionIds;
+	//sessionIds.push_back("95d8dd76-f975-482e-9cd3-29b3ffeff09a");
+	//sessionIds.push_back("8c7287d9-9098-44c5-9662-4650c12d02cb");
+	//std::vector<tethr::SessionStatus> sessionStatuses = GetRecordingStatus(sessionIds);
 
 	//Send Recording example
 	std::string fileName = "SampleRecording.json";
@@ -162,7 +116,7 @@ int main()
 	std::cout << "Tethr Call Id   : " << result.CallId << std::endl;
 
 	std::cout << "Press Enter to Exit";
-	std::cin.ignore();*/
+	std::cin.ignore();
 	
     return 0;
 }

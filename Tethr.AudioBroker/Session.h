@@ -20,8 +20,9 @@
 #include "Poco/JSON/Parser.h"
 #include "Poco/URI.h"
 #include "Poco/Net/FilePartSource.h"
+#include "Poco/Net/StringPartSource.h"
 #include "Poco/SingletonHolder.h"
-#include "RecordingInfo.h"
+#include "Poco/UUIDGenerator.h"
 #include "Token.h"
 
 namespace tethr {
@@ -44,7 +45,7 @@ namespace tethr {
 		std::string Get(std::string resourcePath);
 		void Put(std::string resourcePath, Poco::JSON::Object::Ptr body); //In the original SDK this is a POST, but cant overload in the same way here.  								 //Using Put as the function name it does not provide a response so might be close to Put equivalent
 		std::string Post(std::string resourcePath, Poco::JSON::Object::Ptr body);
-		Poco::DynamicStruct PostMutliPartFormData(std::string resourcePath, Poco::JSON::Object info, std::string filePath, std::string dataPartMediaType = "application/octet-stream");
+		std::string PostMutliPartFormData(std::string resourcePath, Poco::JSON::Object::Ptr recordingInfo, std::string filePath, std::string dataPartMediaType = "application/octet-stream");
 	private:
 
 		Poco::SharedPtr<Poco::Net::PrivateKeyPassphraseHandler> pConsoleHandler;
