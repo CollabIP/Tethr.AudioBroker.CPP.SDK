@@ -10,6 +10,7 @@ The Audio Broker SDK uses POCO C++ libraries from https://pocoproject.org/.  Poc
 You may build these libraries from source or you can use our pre-built versions packaged with the SDK.  Additional binaries and our build source for poco is available at the following repositories
 
 https://github.com/CollabIP/POCO-Binaries 
+
 https://github.com/CollabIP/POCO-Build
 
 # Building the SDK (Notes and 
@@ -21,7 +22,7 @@ Visual Studio 2017 has advanced platform targeting features built into the IDE. 
 
 # Known Issues:
 
-The MTd builds (Static) versions are not working due to an OpenSSL conflict.  This will be resolved shortly.  Please use the DLL (Shared Library) builds
+The MT/MTd builds (Static) versions are not working due to an OpenSSL conflict.  This will be resolved shortly.  Please use the DLL (Shared Library) builds
 
 
 
