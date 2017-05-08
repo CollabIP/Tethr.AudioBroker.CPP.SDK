@@ -1,4 +1,4 @@
-# Tethr.AudioBroker.CPP.SDK
+# Tethr.AudioBroker.CPP.SDK (Beta)
 Tethr SDK Example for C++
 
 Welcome to the Tethr SDK for C++ (Windows).  This SDK provides a library and a sample program that will help you upload calls and get statuses from Tethr.
@@ -17,7 +17,11 @@ https://github.com/CollabIP/POCO-Build
 The solution and project files were created with Visual Studio 2017.  If you do not have Visual Studio 2017 please download it here 
 https://www.visualstudio.com/downloads/ 
 
-Visual Studio 2017 has advanced platform targeting features built into the IDE.  You can use this to target any platform version from Visual Studio 2008 through Visual Studio 2017.  To target the appropriate compiler you must also have the version of Visual Studio you want to compile against installed on your system.  We have provided platform specific POCO binaries for your chosen platform.  Please use the appropriate binaries to link with your platform
+Visual Studio 2017 has advanced platform targeting features built into the IDE.  You can use this to target any platform version from Visual Studio 2008 through Visual Studio 2017.  To target the appropriate compiler you must also have the version of Visual Studio you want to compile against installed on your system.  We have provided platform specific POCO binaries for your chosen platform.  Please use the appropriate binaries to link with your platform.
+
+# Known Issues:
+
+The MTd builds (Static) versions are not working due to an OpenSSL conflict.  This will be resolved shortly.  Please use the DLL (Shared Library) builds
 
 
 
