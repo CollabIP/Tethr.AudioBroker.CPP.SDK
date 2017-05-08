@@ -11,7 +11,14 @@ namespace tethr
 	ArchivedRecording::~ArchivedRecording()
 	{
 	}
-
+	
+	/// <summary>
+	/// Sends the recording.
+	/// </summary>
+	/// <param name="jsonFileName">Name of the json file.</param>
+	/// <param name="audioFileName">Name of the audio file.</param>
+	/// <param name="mediaType">Type of the media.</param>
+	/// <returns>ArchiveC</returns>
 	ArchiveCallResponse ArchivedRecording::SendRecording(std::string jsonFileName, std::string audioFileName, std::string mediaType)
 	{
 		// Setting the Audio Format to make sure it matches the media type, RecordingInfo.Audio will be obsoleted at some point in favor of only looking at the media type.
@@ -34,10 +41,14 @@ namespace tethr
 
 		return callResponse;
 	}
-
+	
+	/// <summary>
+	/// Gets the recording status.
+	/// </summary>
+	/// <param name="sessionId">The session identifier.</param>
+	/// <returns>Session Status</returns>
 	SessionStatus ArchivedRecording::GetRecordingStatus(std::string sessionId)
 	{
-		//Todo: return vector<sessionstatus> and add exception handling
 		//Create json array structure like so from vector
 		Poco::JSON::Object::Ptr root = new Poco::JSON::Object();
 
@@ -108,7 +119,12 @@ namespace tethr
 
 		return callSessionStatuses.front();
 	}
-
+	
+	/// <summary>
+	/// Gets the recording status.
+	/// </summary>
+	/// <param name="sessionIds">The session ids.</param>
+	/// <returns>vector of SessionStatus</returns>
 	std::vector<SessionStatus> ArchivedRecording::GetRecordingStatus(std::vector<std::string> sessionIds)
 	{
 		//Todo: return vector<sessionstatus> and add exception handling
@@ -185,7 +201,13 @@ namespace tethr
 		
 		return callSessionStatuses;
 	}
-
+	
+	/// <summary>
+	/// Sets the audio format. (Helper)
+	/// </summary>
+	/// <param name="jsonFileName">Name of the json file.</param>
+	/// <param name="mediaType">Type of the media.</param>
+	/// <returns></returns>
 	Poco::JSON::Object::Ptr ArchivedRecording::SetAudioFormat(std::string jsonFileName, std::string mediaType)
 	{
 		Poco::Util::JSONConfiguration json(jsonFileName);
