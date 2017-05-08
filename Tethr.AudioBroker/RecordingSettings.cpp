@@ -1,5 +1,6 @@
 #include "RecordingSettings.h"
 
+//Todo:: Add Try/Catch/Throw
 namespace tethr
 {
 	RecordingSettings::RecordingSettings(Session *session)

@@ -141,11 +141,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;AUDIOBROKER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Source\GitHub\POCO-Binaries\1.7.8\Crypto\include;C:\Source\GitHub\POCO-Binaries\1.7.8\OpenSSL-Win32\include;C:\Source\GitHub\POCO-Binaries\1.7.8\Util\include;C:\Source\GitHub\POCO-Binaries\1.7.8\Net\include;C:\Source\GitHub\POCO-Binaries\1.7.8\NetSSL_OpenSSL\include;C:\Source\GitHub\POCO-Binaries\1.7.8\JSON\include;C:\Source\GitHub\POCO-Binaries\1.7.8\Foundation\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\OpenSSL-Win32\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>C:\Source\GitHub\POCO-Binaries\1.7.8\Util\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\NetSSL_OpenSSL\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\Net\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\Crypto\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\JSON\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\Foundation\bin\Win32\debug_shared_100_unicode;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\Util\bin\Win32\debug_shared_100_unicode;$(SolutionDir)Dependencies\NetSSL_OpenSSL\bin\Win32\debug_shared_100_unicode;$(SolutionDir)Dependencies\Net\bin\Win32\debug_shared_100_unicode;$(SolutionDir)Dependencies\Crypto\bin\Win32\debug_shared_100_unicode;$(SolutionDir)Dependencies\JSON\bin\Win32\debug_shared_100_unicode;$(SolutionDir)Dependencies\Foundation\bin\Win32\debug_shared_100_unicode;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>PocoFoundationd.lib;PocoJSONd.lib;PocoNetd.lib;PocoNetSSLd.lib;PocoUtild.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
       <OutputFile>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).dll</OutputFile>

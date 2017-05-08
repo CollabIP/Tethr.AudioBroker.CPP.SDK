@@ -80,10 +80,6 @@ int main()
 	tethr::Configuration config;
 	tethr::ConnectionString cs = config.LoadConfiguration("Configuration.Properties");  //You can also initialize these directly if you wish
 
-	Poco::SharedPtr<Poco::Net::InvalidCertificateHandler> m_pCertificateHandler = new Poco::Net::AcceptCertificateHandler(true);
-	Poco::Net::Context::Ptr m_pContext = new Poco::Net::Context(Poco::Net::Context::CLIENT_USE, "", "", "", Poco::Net::Context::VERIFY_RELAXED, 9, true, "ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH");
-	Poco::Net::SSLManager::instance().initializeClient(nullptr, m_pCertificateHandler, m_pContext);
-
 	//The session object required that you set HostUri, ApiUser, and Password.  These can be loaded from a properties file or
 	//you can also initialize these directly.
 	_session.get()->HostUri = cs.HostUri;

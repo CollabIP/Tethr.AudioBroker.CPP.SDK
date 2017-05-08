@@ -1,13 +1,14 @@
 #include "Session.h"
 
+//Todo: Review Need to catch JSON & SSL exceptions in these methods and rethrow ApplciationException or pass through and notify the caller of exceptions that can be thrown
 namespace tethr {
 	
 	Session::Session(): ResetAuthTokenOnUnauthorized(true)
 	{
 		Poco::Net::initializeSSL();
-		pConsoleHandler = new Poco::Net::KeyConsoleHandler(false); //This is kind of silly, but required for proper initialization
+		pConsoleHandler = new Poco::Net::KeyConsoleHandler(false); //This is kind of silly, but required for proper initialization (otherwise warning - prompts for password when using client side ssl).
 		m_pCertificateHandler = new Poco::Net::AcceptCertificateHandler(true);
-		m_pContext = new Poco::Net::Context(Poco::Net::Context::CLIENT_USE, "", "", "", Poco::Net::Context::VERIFY_NONE, 9, true, "ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH");
+		m_pContext = new Poco::Net::Context(Poco::Net::Context::CLIENT_USE, "", "", "", Poco::Net::Context::VERIFY_NONE, 9, true, "ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH"); //Todo: Review (Verify NONE is not doing any checking.  Ok for now) need cert details
 
 		Poco::Net::SSLManager::instance().initializeClient(pConsoleHandler, m_pCertificateHandler, m_pContext);
 	}
