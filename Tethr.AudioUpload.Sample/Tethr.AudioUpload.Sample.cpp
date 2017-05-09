@@ -61,7 +61,7 @@ tethr::SendFileResult SendFile(std::string jsonFileName)
 
 	Poco::Path audioFilePath(jsonFileName);
 	audioFilePath.setExtension("wav");
-	
+
 	tethr::ArchiveCallResponse result = tethrConnection.SendRecording(jsonFileName, audioFilePath.getFileName(), "audio/wav");
 
 	tethr::SendFileResult fileResult;
@@ -73,44 +73,49 @@ tethr::SendFileResult SendFile(std::string jsonFileName)
 
 int main()
 {
-	//Create the Session
-	// The Session object should be a singleton, and reused on subsequent sends so that
-	// the oauth bearer token can be reused and refreshed only when it expires
-	tethr::Configuration config;
-	tethr::ConnectionString cs = config.LoadConfiguration("Configuration.Properties");  //You can also initialize these directly if you wish
+	try
+	{
+		//Create the Session
+		// The Session object should be a singleton, and reused on subsequent sends so that
+		// the oauth bearer token can be reused and refreshed only when it expires
+		tethr::Configuration config;
+		tethr::ConnectionString cs = config.LoadConfiguration("Configuration.Properties");  //You can also initialize these directly if you wish
 
-	_session = tethr::Session::GetInstance(cs.HostUri, cs.ApiUser, cs.Password);
-	tethr::RecordingSettings tethrConnection(_session);
+		_session = tethr::Session::GetInstance(cs.HostUri, cs.ApiUser, cs.Password);
+		tethr::RecordingSettings tethrConnection(_session);
 
-	//API Examples - Uncomment to execute
-	//1. Get RecordingSummaries Example
-	std::vector<tethr::RecordingSettingSummary> recordingSettingSummaries = GetRecordingSummaries();
+		//2. Get Recording Status Example 
+		std::string sessionId = "95d8dd76-f975-482e-9cd3-29b3ffeff09a";
+		tethr::SessionStatus sessionStatus = GetRecordingStatus(sessionId);
 
-	//2. Get Recording Status Example 
-	//std::string sessionId = "95d8dd76-f975-482e-9cd3-29b3ffeff09a";
-	//tethr::SessionStatus sessionStatus = GetRecordingStatus(sessionId);
+		//3. Get Recording Statuses Example
+		//std::vector<std::string> sessionIds;
+		//sessionIds.push_back("95d8dd76-f975-482e-9cd3-29b3ffeff09a");
+		//sessionIds.push_back("8c7287d9-9098-44c5-9662-4650c12d02cb");
+		//std::vector<tethr::SessionStatus> sessionStatuses = GetRecordingStatus(sessionIds);
 
-	//3. Get Recording Statuses Example
-	//std::vector<std::string> sessionIds;
-	//sessionIds.push_back("95d8dd76-f975-482e-9cd3-29b3ffeff09a");
-	//sessionIds.push_back("8c7287d9-9098-44c5-9662-4650c12d02cb");
-	//std::vector<tethr::SessionStatus> sessionStatuses = GetRecordingStatus(sessionIds);
+		//Send Recording example
+		std::string fileName = "SampleRecording.json";
+		tethr::SendFileResult result = SendFile(fileName);
 
-	//Send Recording example
-	std::string fileName = "SampleRecording.json";
-	tethr::SendFileResult result = SendFile(fileName);
+		std::string localTime(Poco::DateTimeFormatter::format(result.StartTime, "%e %b %Y %H:%M"));
+
+		std::cout << "Sent recording:" << std::endl;
+		std::cout << "Session Id      : " << result.SessionId << std::endl;
+		std::cout << "Call Start Time : " << localTime << std::endl;
+		std::cout << "Tethr Call Id   : " << result.CallId << std::endl;
+
+		std::cout << "Press Enter to Exit";
+		std::cin.ignore();
+
+		return 0;
+	}
+	catch (Poco::ApplicationException e)
+	{
+		e.what();
+	}
+
 	
-	std::string localTime(Poco::DateTimeFormatter::format(result.StartTime, "%e %b %Y %H:%M"));
-
-	std::cout << "Sent recording:" << std::endl;
-	std::cout << "Session Id      : " << result.SessionId << std::endl;
-	std::cout << "Call Start Time : " << localTime << std::endl;
-	std::cout << "Tethr Call Id   : " << result.CallId << std::endl;
-
-	std::cout << "Press Enter to Exit";
-	std::cin.ignore();
-	
-    return 0;
 }
 
 

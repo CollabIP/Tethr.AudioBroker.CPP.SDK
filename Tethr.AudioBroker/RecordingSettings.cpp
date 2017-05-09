@@ -1,6 +1,5 @@
 #include "RecordingSettings.h"
 
-//Todo:: Add Try/Catch/Throw
 namespace tethr
 {
 	RecordingSettings::RecordingSettings(Session *session)
@@ -14,8 +13,17 @@ namespace tethr
 
 	std::vector<RecordingSettingSummary> RecordingSettings::GetRecordingSessionSummaries()
 	{
-		std::string json = _session->Get("/sources/v1/recordingSettings");
-		
+		try
+		{
+			std::string json = _session->Get("/sources/v1/recordingSettings");
+			//Todo This json is always blank?  
+		}
+		catch (Poco::ApplicationException e)
+		{
+			e.rethrow();
+		}
+
 		return std::vector<RecordingSettingSummary>();
+		
 	}
 }

@@ -1,6 +1,6 @@
 #include "ArchivedRecording.h"
 
-//Todo:: Add Try/Catch/Throw
+//Todo:: Fix exception handling.  Right now just rethrowing to the caller.  Maybe throw std::exception instead and change return path structure.
 namespace tethr
 {
 	ArchivedRecording::ArchivedRecording(Session * session)
@@ -19,27 +19,37 @@ namespace tethr
 	/// <param name="audioFileName">Name of the audio file.</param>
 	/// <param name="mediaType">Type of the media.</param>
 	/// <returns>ArchiveC</returns>
+	/// <remarks>Throws Poco::ApplicationException</remarks>
 	ArchiveCallResponse ArchivedRecording::SendRecording(std::string jsonFileName, std::string audioFileName, std::string mediaType)
 	{
-		// Setting the Audio Format to make sure it matches the media type, RecordingInfo.Audio will be obsoleted at some point in favor of only looking at the media type.
-		Poco::JSON::Object::Ptr jsonObject = SetAudioFormat(jsonFileName, mediaType);
+		try
+		{
+			// Setting the Audio Format to make sure it matches the media type, RecordingInfo.Audio will be obsoleted at some point in favor of only looking at the media type.
+			Poco::JSON::Object::Ptr jsonObject = SetAudioFormat(jsonFileName, mediaType);
 
-		std::string result = _session->PostMutliPartFormData("/callCapture/v1/archive", jsonObject, audioFileName, mediaType);
+			std::string result = _session->PostMutliPartFormData("/callCapture/v1/archive", jsonObject, audioFileName, mediaType);
 
-		//Parse JSON
-		Poco::JSON::Parser parser;
-		Poco::Dynamic::Var jsonParseResult = parser.parse(result);
+			//Parse JSON
+			Poco::JSON::Parser parser;
+			Poco::Dynamic::Var jsonParseResult = parser.parse(result);
+
+			//Create JSON object Pointer
+			Poco::JSON::Object::Ptr archiveResult = jsonParseResult.extract<Poco::JSON::Object::Ptr>();
+
+			//Get callSessions Object
+			Poco::Dynamic::Var callId = archiveResult->get("callId");
+
+			ArchiveCallResponse callResponse;
+			callResponse.CallId = callId.convert<std::string>();
+
+			return callResponse;
+		}
+		catch(Poco::ApplicationException e)
+		{
+			e.rethrow();
+		}
 		
-		//Create JSON object Pointer
-		Poco::JSON::Object::Ptr archiveResult = jsonParseResult.extract<Poco::JSON::Object::Ptr>();
-
-		//Get callSessions Object
-		Poco::Dynamic::Var callId = archiveResult->get("callId");
-
-		ArchiveCallResponse callResponse;
-		callResponse.CallId = callId.convert<std::string>();
-
-		return callResponse;
+		throw Poco::ApplicationException("An unexpected error occured while sending the recording.");
 	}
 	
 	/// <summary>
@@ -47,77 +57,87 @@ namespace tethr
 	/// </summary>
 	/// <param name="sessionId">The session identifier.</param>
 	/// <returns>Session Status</returns>
+	/// <remarks>Throws Poco::ApplicationException</remarks>
 	SessionStatus ArchivedRecording::GetRecordingStatus(std::string sessionId)
 	{
-		//Create json array structure like so from vector
-		Poco::JSON::Object::Ptr root = new Poco::JSON::Object();
-
-		//Create the SessionId Array
-		Poco::JSON::Array::Ptr sessionIdArray = new Poco::JSON::Array();
-
-		sessionIdArray->add(sessionId);
-		
-		//Set the name for the array
-		root->set("CallSessionIds", sessionIdArray);
-
-		//Poco::DynamicStruct statuses = _session->Post("/callCapture/v1/status", root);
-		std::string json = _session->Post("/callCapture/v1/status", root);
-
-		//Parse JSON
-		Poco::JSON::Parser parser;
-		Poco::Dynamic::Var jsonParseResult = parser.parse(json);
-
-		//Create JSON object Pointer
-		Poco::JSON::Object::Ptr jsonObject = jsonParseResult.extract<Poco::JSON::Object::Ptr>();
-
-		//Get callSessions Object
-		Poco::Dynamic::Var callSessions = jsonObject->get("callSessions");
-		Poco::JSON::Array::Ptr callSessionsObject = callSessions.extract<Poco::JSON::Array::Ptr>();
-
-		std::vector<SessionStatus> callSessionStatuses;
-		for (int i = 0; i < callSessionsObject->size(); ++i)
+		try
 		{
-			SessionStatus sessionStatus;
-			Poco::JSON::Object::Ptr callSession = callSessionsObject->getObject(i);
-			for (Poco::JSON::Object::ConstIterator it = callSession->begin(), end = callSession->end(); it != end; ++it)
+			//Create json array structure like so from vector
+			Poco::JSON::Object::Ptr root = new Poco::JSON::Object();
+
+			//Create the SessionId Array
+			Poco::JSON::Array::Ptr sessionIdArray = new Poco::JSON::Array();
+
+			sessionIdArray->add(sessionId);
+
+			//Set the name for the array
+			root->set("CallSessionIds", sessionIdArray);
+
+			//Poco::DynamicStruct statuses = _session->Post("/callCapture/v1/status", root);
+			std::string json = _session->Post("/callCapture/v1/status", root);
+
+			//Parse JSON
+			Poco::JSON::Parser parser;
+			Poco::Dynamic::Var jsonParseResult = parser.parse(json);
+
+			//Create JSON object Pointer
+			Poco::JSON::Object::Ptr jsonObject = jsonParseResult.extract<Poco::JSON::Object::Ptr>();
+
+			//Get callSessions Object
+			Poco::Dynamic::Var callSessions = jsonObject->get("callSessions");
+			Poco::JSON::Array::Ptr callSessionsObject = callSessions.extract<Poco::JSON::Array::Ptr>();
+
+			std::vector<SessionStatus> callSessionStatuses;
+			for (int i = 0; i < callSessionsObject->size(); ++i)
 			{
-				if (_stricmp(it->first.c_str(), "callId") == 0)
+				SessionStatus sessionStatus;
+				Poco::JSON::Object::Ptr callSession = callSessionsObject->getObject(i);
+				for (Poco::JSON::Object::ConstIterator it = callSession->begin(), end = callSession->end(); it != end; ++it)
 				{
-					sessionStatus.CallId = it->second.convert<std::string>();
+					if (_stricmp(it->first.c_str(), "callId") == 0)
+					{
+						sessionStatus.CallId = it->second.convert<std::string>();
+					}
+					else if (_stricmp(it->first.c_str(), "sessionId") == 0)
+					{
+						sessionStatus.SessionId = it->second.convert<std::string>();;
+					}
+					else if (_stricmp(it->first.c_str(), "status") == 0)
+					{
+						if (_stricmp(it->second.convert<std::string>().c_str(), "InProgress") == 0)
+						{
+							sessionStatus.Status = InProgress;
+						}
+						else if (_stricmp(it->second.convert<std::string>().c_str(), "Complete") == 0)
+						{
+							sessionStatus.Status = Complete;
+						}
+						else if (_stricmp(it->second.convert<std::string>().c_str(), "Concluded") == 0)
+						{
+							sessionStatus.Status = Concluded;
+						}
+						else if (_stricmp(it->second.convert<std::string>().c_str(), "NotFound") == 0)
+						{
+							sessionStatus.Status = NotFound;
+						}
+						else if (_stricmp(it->second.convert<std::string>().c_str(), "Error") == 0)
+						{
+							sessionStatus.Status = Error;
+						}
+					}
 				}
-				else if (_stricmp(it->first.c_str(), "sessionId") == 0)
-				{
-					sessionStatus.SessionId = it->second.convert<std::string>();;
-				}
-				else if (_stricmp(it->first.c_str(), "status") == 0)
-				{
-					if (_stricmp(it->second.convert<std::string>().c_str(), "InProgress") == 0)
-					{
-						sessionStatus.Status = InProgress;
-					}
-					else if (_stricmp(it->second.convert<std::string>().c_str(), "Complete") == 0)
-					{
-						sessionStatus.Status = Complete;
-					}
-					else if (_stricmp(it->second.convert<std::string>().c_str(), "Concluded") == 0)
-					{
-						sessionStatus.Status = Concluded;
-					}
-					else if (_stricmp(it->second.convert<std::string>().c_str(), "NotFound") == 0)
-					{
-						sessionStatus.Status = NotFound;
-					}
-					else if (_stricmp(it->second.convert<std::string>().c_str(), "Error") == 0)
-					{
-						sessionStatus.Status = Error;
-					}
-				}
+
+				callSessionStatuses.push_back(sessionStatus);
 			}
 
-			callSessionStatuses.push_back(sessionStatus);
+			return callSessionStatuses.front();
+		}
+		catch (Poco::ApplicationException e)
+		{
+			e.rethrow();
 		}
 
-		return callSessionStatuses.front();
+		throw Poco::ApplicationException("An unexpected error occured while getting the recording status.");
 	}
 	
 	/// <summary>
@@ -125,81 +145,90 @@ namespace tethr
 	/// </summary>
 	/// <param name="sessionIds">The session ids.</param>
 	/// <returns>vector of SessionStatus</returns>
+	/// <remarks>Throws Poco::ApplicationException</remarks>
 	std::vector<SessionStatus> ArchivedRecording::GetRecordingStatus(std::vector<std::string> sessionIds)
 	{
-		//Todo: return vector<sessionstatus> and add exception handling
-		//Create json array structure like so from vector
-		Poco::JSON::Object::Ptr root = new Poco::JSON::Object();
-		
-		//Create the SessionId Array
-		Poco::JSON::Array::Ptr sessionIdArray = new Poco::JSON::Array();
-
-		for (std::vector<std::string>::iterator it = sessionIds.begin(); it != sessionIds.end(); ++it)
+		try
 		{
-			sessionIdArray->add(*it);
-		}
-			
-		//Set the name for the array
-		root->set("CallSessionIds", sessionIdArray);
+			//Create json array structure like so from vector
+			Poco::JSON::Object::Ptr root = new Poco::JSON::Object();
 
-		//Poco::DynamicStruct statuses = _session->Post("/callCapture/v1/status", root);
-		std::string json = _session->Post("/callCapture/v1/status", root);
+			//Create the SessionId Array
+			Poco::JSON::Array::Ptr sessionIdArray = new Poco::JSON::Array();
 
-		//Parse JSON
-		Poco::JSON::Parser parser;
-		Poco::Dynamic::Var jsonParseResult = parser.parse(json);
-
-		//Create JSON object Pointer
-		Poco::JSON::Object::Ptr jsonObject = jsonParseResult.extract<Poco::JSON::Object::Ptr>();
-		
-		//Get callSessions Object
-		Poco::Dynamic::Var callSessions = jsonObject->get("callSessions");
-		Poco::JSON::Array::Ptr callSessionsObject = callSessions.extract<Poco::JSON::Array::Ptr>();
-
-		std::vector<SessionStatus> callSessionStatuses;
-		for (int i = 0; i < callSessionsObject->size(); ++i) 
-		{
-			SessionStatus sessionStatus;
-			Poco::JSON::Object::Ptr callSession = callSessionsObject->getObject(i);
-			for (Poco::JSON::Object::ConstIterator it = callSession->begin(), end = callSession->end(); it != end; ++it)
+			for (std::vector<std::string>::iterator it = sessionIds.begin(); it != sessionIds.end(); ++it)
 			{
-				if (_stricmp(it->first.c_str(), "callId") == 0)
-				{
-					sessionStatus.CallId = it->second.convert<std::string>();
-				}
-				else if(_stricmp(it->first.c_str(), "sessionId") == 0)
-				{
-					sessionStatus.SessionId = it->second.convert<std::string>();;
-				}
-				else if (_stricmp(it->first.c_str(), "status") == 0)
-				{
-					if (_stricmp(it->second.convert<std::string>().c_str(), "InProgress") == 0)
-					{
-						sessionStatus.Status = InProgress;
-					}
-					else if (_stricmp(it->second.convert<std::string>().c_str(), "Complete") == 0)
-					{
-						sessionStatus.Status = Complete;
-					}
-					else if (_stricmp(it->second.convert<std::string>().c_str(), "Concluded") == 0)
-					{
-						sessionStatus.Status = Concluded;
-					}
-					else if (_stricmp(it->second.convert<std::string>().c_str(), "NotFound") == 0)
-					{
-						sessionStatus.Status = NotFound;
-					}
-					else if (_stricmp(it->second.convert<std::string>().c_str(), "Error") == 0)
-					{
-						sessionStatus.Status = Error;
-					}
-				}
+				sessionIdArray->add(*it);
 			}
 
-			callSessionStatuses.push_back(sessionStatus);
+			//Set the name for the array
+			root->set("CallSessionIds", sessionIdArray);
+
+			//Poco::DynamicStruct statuses = _session->Post("/callCapture/v1/status", root);
+			std::string json = _session->Post("/callCapture/v1/status", root);
+
+			//Parse JSON
+			Poco::JSON::Parser parser;
+			Poco::Dynamic::Var jsonParseResult = parser.parse(json);
+
+			//Create JSON object Pointer
+			Poco::JSON::Object::Ptr jsonObject = jsonParseResult.extract<Poco::JSON::Object::Ptr>();
+
+			//Get callSessions Object
+			Poco::Dynamic::Var callSessions = jsonObject->get("callSessions");
+			Poco::JSON::Array::Ptr callSessionsObject = callSessions.extract<Poco::JSON::Array::Ptr>();
+
+			std::vector<SessionStatus> callSessionStatuses;
+			for (int i = 0; i < callSessionsObject->size(); ++i)
+			{
+				SessionStatus sessionStatus;
+				Poco::JSON::Object::Ptr callSession = callSessionsObject->getObject(i);
+				for (Poco::JSON::Object::ConstIterator it = callSession->begin(), end = callSession->end(); it != end; ++it)
+				{
+					if (_stricmp(it->first.c_str(), "callId") == 0)
+					{
+						sessionStatus.CallId = it->second.convert<std::string>();
+					}
+					else if (_stricmp(it->first.c_str(), "sessionId") == 0)
+					{
+						sessionStatus.SessionId = it->second.convert<std::string>();;
+					}
+					else if (_stricmp(it->first.c_str(), "status") == 0)
+					{
+						if (_stricmp(it->second.convert<std::string>().c_str(), "InProgress") == 0)
+						{
+							sessionStatus.Status = InProgress;
+						}
+						else if (_stricmp(it->second.convert<std::string>().c_str(), "Complete") == 0)
+						{
+							sessionStatus.Status = Complete;
+						}
+						else if (_stricmp(it->second.convert<std::string>().c_str(), "Concluded") == 0)
+						{
+							sessionStatus.Status = Concluded;
+						}
+						else if (_stricmp(it->second.convert<std::string>().c_str(), "NotFound") == 0)
+						{
+							sessionStatus.Status = NotFound;
+						}
+						else if (_stricmp(it->second.convert<std::string>().c_str(), "Error") == 0)
+						{
+							sessionStatus.Status = Error;
+						}
+					}
+				}
+
+				callSessionStatuses.push_back(sessionStatus);
+			}
+
+			return callSessionStatuses;
 		}
-		
-		return callSessionStatuses;
+		catch (Poco::ApplicationException e)
+		{
+			e.rethrow();
+		}
+
+		throw Poco::ApplicationException("An unexpected error occured while getting the recording status.");
 	}
 	
 	/// <summary>

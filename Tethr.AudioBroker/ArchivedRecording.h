@@ -15,8 +15,6 @@ namespace tethr
 
 		Session * _session;
 
-		//Todo: - Review I changed the signature of this method to make it easier for the caller as serializing/deserializng json to an object is
-		//Todo: - not as easy as it is in .NET
 		ArchiveCallResponse SendRecording(std::string jsonFileName, std::string audioFileName, std::string mediaType);
 		SessionStatus GetRecordingStatus(std::string sessionId);
 		std::vector<SessionStatus> GetRecordingStatus(std::vector<std::string> sessionIds);
