@@ -13,10 +13,10 @@ https://github.com/CollabIP/POCO-Binaries
 
 https://github.com/CollabIP/POCO-Build
 
-# Building the SDK (Notes and 
+# Building the SDK (Notes and Instructions)
 
 The solution and project files were created with Visual Studio 2017.  If you do not have Visual Studio 2017 please download it here 
-https://www.visualstudio.com/downloads/ 
+https://www.visualstudio.com/downloads/ (the community edition should be fine)
 
 Visual Studio 2017 has advanced platform targeting features built into the IDE.  You can use this to target any platform version from Visual Studio 2008 through Visual Studio 2017.  To target the appropriate compiler you must also have the version of Visual Studio you want to compile against installed on your system.  We have provided platform specific POCO binaries for your chosen platform.  Please use the appropriate binaries to link with your platform.
 
