@@ -3,12 +3,11 @@
 
 #include "stdafx.h"
 
-Poco::SingletonHolder<tethr::Session> _session;
-
+tethr::Session * _session;
 
 std::vector<tethr::RecordingSettingSummary> GetRecordingSummaries()
 {
-	tethr::RecordingSettings tethrConnection(_session.get());
+	tethr::RecordingSettings tethrConnection(_session);
 
 	return tethrConnection.GetRecordingSessionSummaries();
 
@@ -16,14 +15,14 @@ std::vector<tethr::RecordingSettingSummary> GetRecordingSummaries()
 
 tethr::SessionStatus GetRecordingStatus(std::string sessionId)
 {
-	tethr::ArchivedRecording tethrConnection(_session.get());
+	tethr::ArchivedRecording tethrConnection(_session);
 
 	return tethrConnection.GetRecordingStatus(sessionId);
 }
 
 std::vector<tethr::SessionStatus> GetRecordingStatus(std::vector<std::string> sessionIds)
 {
-	tethr::ArchivedRecording tethrConnection(_session.get());
+	tethr::ArchivedRecording tethrConnection(_session);
 
 	return tethrConnection.GetRecordingStatus(sessionIds);
 }
@@ -31,7 +30,7 @@ std::vector<tethr::SessionStatus> GetRecordingStatus(std::vector<std::string> se
 tethr::SendFileResult SendFile(std::string jsonFileName)
 {
 	// Create an Instance of the Archive Recording provider used to send archived audio to Tethr
-	tethr::ArchivedRecording tethrConnection(_session.get());
+	tethr::ArchivedRecording tethrConnection(_session);
 
 	// NOTE: We have to do some additional parsing of the JSON to make the sample unique and reusable in this example.
 
@@ -80,15 +79,12 @@ int main()
 	tethr::Configuration config;
 	tethr::ConnectionString cs = config.LoadConfiguration("Configuration.Properties");  //You can also initialize these directly if you wish
 
-	//The session object required that you set HostUri, ApiUser, and Password.  These can be loaded from a properties file or
-	//you can also initialize these directly.
-	_session.get()->HostUri = cs.HostUri;
-	_session.get()->ApiUser = cs.ApiUser;
-	_session.get()->ApiPassword = cs.Password;
+	_session = tethr::Session::GetInstance(cs.HostUri, cs.ApiUser, cs.Password);
+	tethr::RecordingSettings tethrConnection(_session);
 
 	//API Examples - Uncomment to execute
 	//1. Get RecordingSummaries Example
-	//std::vector<tethr::RecordingSettingSummary> recordingSettingSummaries = GetRecordingSummaries();
+	std::vector<tethr::RecordingSettingSummary> recordingSettingSummaries = GetRecordingSummaries();
 
 	//2. Get Recording Status Example 
 	//std::string sessionId = "95d8dd76-f975-482e-9cd3-29b3ffeff09a";

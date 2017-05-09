@@ -6,11 +6,11 @@ namespace tethr {
 	Session::Session(): ResetAuthTokenOnUnauthorized(true)
 	{
 		Poco::Net::initializeSSL();
-		pConsoleHandler = new Poco::Net::KeyConsoleHandler(false); //This is kind of silly, but required for proper initialization (otherwise warning - prompts for password when using client side ssl).
+		m_pConsoleHandler = new Poco::Net::KeyConsoleHandler(false); //This is kind of silly, but required for proper initialization (otherwise warning - prompts for password when using client side ssl).
 		m_pCertificateHandler = new Poco::Net::AcceptCertificateHandler(true);
 		m_pContext = new Poco::Net::Context(Poco::Net::Context::CLIENT_USE, "", "", "", Poco::Net::Context::VERIFY_NONE, 9, true, "ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH"); //Todo: Review (Verify NONE is not doing any checking.  Ok for now) need cert details
 
-		Poco::Net::SSLManager::instance().initializeClient(pConsoleHandler, m_pCertificateHandler, m_pContext);
+		Poco::Net::SSLManager::instance().initializeClient(m_pConsoleHandler, m_pCertificateHandler, m_pContext);
 	}
 
 	Session::~Session()
@@ -18,14 +18,29 @@ namespace tethr {
 		Poco::Net::uninitializeSSL();
 	}
 
-	// <summary>
-	/// Instances this instance as a Singleton
-	/// </summary>
-	/// <returns></returns>
-	static Session& instance()
+	Session * Session::GetInstance(std::string hostUri, std::string apiUser, std::string apiPassword)
 	{
 		static Poco::SingletonHolder<Session> singletonHolder;
-		return *singletonHolder.get();
+		Session *session = singletonHolder.get();
+
+		//Set Host Uri
+		if (session->HostUri.empty())
+		{
+			Poco::URI uri(hostUri);
+			session->HostUri = uri;
+		}
+
+		//Set Api User
+		if (session->ApiUser.empty()) {
+			session->ApiUser = apiUser;
+		}
+
+		//Set Api Password
+		if (session->ApiPassword.empty()) {
+			session->ApiPassword = apiPassword;
+		}
+
+		return session;
 	}
 
 	/// <summary>
@@ -34,10 +49,10 @@ namespace tethr {
 	void Session::ClearAuthToken()
 	{
 		//Todo: Not really sure why this is needed?  Just reassign?  Ask Adam
-		Poco::FastMutex::ScopedLock lock(_mutex);
-		_apiToken.AccessToken = nullptr;
-		_apiToken.CreatedTimeStamp = NULL;
-		_apiToken.ExpiresInSeconds = 0;
+		Poco::FastMutex::ScopedLock lock(m_mutex);
+		m_Token.AccessToken = nullptr;
+		m_Token.CreatedTimeStamp = NULL;
+		m_Token.ExpiresInSeconds = 0;
 	}
 
 	/// <summary>
@@ -47,15 +62,15 @@ namespace tethr {
 	/// <returns></returns>
 	std::string Session::GetApiAuthToken(bool force)
 	{
-		bool isValid = _apiToken.IsValid();
+		bool isValid = m_Token.IsValid();
 		if (force == true || isValid == false)
 		{
-			Poco::FastMutex::ScopedLock lock(_mutex);
+			Poco::FastMutex::ScopedLock lock(m_mutex);
 
-			_apiToken = GetClientCredentials();
+			m_Token = GetClientCredentials();
 		}
 
-		return _apiToken.AccessToken;
+		return m_Token.AccessToken;
 	}
 		
 	/// <summary>

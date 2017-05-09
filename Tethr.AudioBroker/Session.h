@@ -33,6 +33,8 @@ namespace tethr {
 		Session();
 		~Session();
 		
+		static Session* GetInstance(std::string hostUri, std::string apiUser, std::string apiPassword);
+
 		Poco::URI HostUri;
 		std::string ApiUser;
 		std::string ApiPassword;
@@ -48,15 +50,15 @@ namespace tethr {
 		std::string PostMutliPartFormData(std::string resourcePath, Poco::JSON::Object::Ptr recordingInfo, std::string filePath, std::string dataPartMediaType = "application/octet-stream");
 	private:
 
-		Poco::SharedPtr<Poco::Net::PrivateKeyPassphraseHandler> pConsoleHandler;
+		Poco::SharedPtr<Poco::Net::PrivateKeyPassphraseHandler> m_pConsoleHandler;
 		Poco::SharedPtr<Poco::Net::InvalidCertificateHandler> m_pCertificateHandler;
 		Poco::Net::Context::Ptr m_pContext;
 
 		std::string m_apiToken;
 
-		Poco::FastMutex  _mutex;
+		Poco::FastMutex  m_mutex;
 
-		Token _apiToken;
+		Token m_Token;
 		Token GetClientCredentials();
 		void EnsureAuthorizedStatusCode(Poco::Net::HTTPResponse &response);
 	};

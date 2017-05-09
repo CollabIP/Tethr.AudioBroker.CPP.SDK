@@ -10,7 +10,7 @@ namespace tethr
 	class AUDIOBROKER_API ArchivedRecording
 	{
 	public:
-		ArchivedRecording(Session *session);
+		ArchivedRecording(Session * session);
 		~ArchivedRecording();
 
 		Session * _session;

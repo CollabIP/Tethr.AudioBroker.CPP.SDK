@@ -3,7 +3,7 @@
 //Todo:: Add Try/Catch/Throw
 namespace tethr
 {
-	ArchivedRecording::ArchivedRecording(Session *session)
+	ArchivedRecording::ArchivedRecording(Session * session)
 	{
 		_session = session;
 	}
