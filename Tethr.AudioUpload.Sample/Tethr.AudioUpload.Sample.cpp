@@ -82,18 +82,7 @@ int main()
 		tethr::ConnectionString cs = config.LoadConfiguration("Configuration.Properties");  //You can also initialize these directly if you wish
 
 		_session = tethr::Session::GetInstance(cs.HostUri, cs.ApiUser, cs.Password);
-		tethr::RecordingSettings tethrConnection(_session);
-
-		//2. Get Recording Status Example 
-		std::string sessionId = "95d8dd76-f975-482e-9cd3-29b3ffeff09a";
-		tethr::SessionStatus sessionStatus = GetRecordingStatus(sessionId);
-
-		//3. Get Recording Statuses Example
-		//std::vector<std::string> sessionIds;
-		//sessionIds.push_back("95d8dd76-f975-482e-9cd3-29b3ffeff09a");
-		//sessionIds.push_back("8c7287d9-9098-44c5-9662-4650c12d02cb");
-		//std::vector<tethr::SessionStatus> sessionStatuses = GetRecordingStatus(sessionIds);
-
+		
 		//Send Recording example
 		std::string fileName = "SampleRecording.json";
 		tethr::SendFileResult result = SendFile(fileName);
