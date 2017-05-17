@@ -1,0 +1,43 @@
+{
+	
+	"contacts": [
+		{
+			"channel": 0,
+			"firstName": "John",
+			"lastName": "Doe",
+			"phoneNumber": "1007",
+			"referenceId": "124445",
+			"type": "agent"
+		},
+		{
+			"channel": 1,
+			"firstName": "Jane",
+			"lastName": "Randomer",
+			"phoneNumber": "1001",
+			"referenceId": "55451",
+			"type": "customer"
+		}
+	],
+	"direction": "Outbound",
+	"endTime": "2016-08-30T18:44:32.62859Z",
+	"masterCallId": "3bef3ef1495c49e19bfd21951afcf043",
+	"metadata": {
+		"AgentFirstName": "John",
+		"AgentId": "jd-123",
+		"AgentLastName": "Dow",
+		"CallIndex": "3bef3ef1495c49e19bfd21951afcf043",
+		"CalledNumber": "1001",
+		"CallerNumber": "1007",
+		"Department": "Sales",
+		"DialedNumber": "1001",
+		"LocalIPAddress": "192.168.236.1:16002",
+		"Location": "MidWest-ContactCenter",
+		"RemoteIPAddress": "192.168.236.128:16008",
+		"Skill": "Widget",
+		"Station": "IPE1",
+		"StationType": "IPE"
+	},
+	"numberDialed": "1001",
+	"sessionId": "137136508237798880",
+	"startTime": "2016-08-30T18:43:34.5565965Z"
+}

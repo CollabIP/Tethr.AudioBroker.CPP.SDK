@@ -50,7 +50,7 @@ int main()
 		// The Session object should be a singleton, and reused on subsequent sends so that
 		// the oauth bearer token can be reused and refreshed only when it expires
 		tethr::Configuration config;
-		tethr::ConnectionString cs = config.LoadConfiguration("C:\\Source\\GitHub\\Tethr.AudioBroker.CPP.SDK\\Tethr.AudioUpload.Sample\\Configuration.Properties");  //You can also initialize these directly if you wish
+		tethr::ConnectionString cs = config.LoadConfiguration("Configuration.Properties");  //You can also initialize these directly if you wish
 
 		_session = tethr::Session::GetInstance(cs.HostUri, cs.ApiUser, cs.Password);
 		
@@ -105,7 +105,7 @@ int main()
 		recordingInfo.StartTime = utcNow;  //This should be the UTC start time 
 		recordingInfo.EndTime = utcNow; //UtC end time
 
-		tethr::SendFileResult result = SendFile(recordingInfo, "C:\\Source\\GitHub\\Tethr.AudioBroker.CPP.SDK\\Tethr.AudioUpload.Sample\\SampleRecording.wav", "audio/wav");
+		tethr::SendFileResult result = SendFile(recordingInfo, "SampleRecording.wav", "audio/wav");
 
 		std::string localTime(Poco::DateTimeFormatter::format(result.StartTime, "%e %b %Y %H:%M"));
 
