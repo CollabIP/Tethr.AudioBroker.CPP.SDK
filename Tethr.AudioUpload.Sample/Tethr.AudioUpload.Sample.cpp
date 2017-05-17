@@ -27,49 +27,20 @@ std::vector<tethr::SessionStatus> GetRecordingStatus(std::vector<std::string> se
 	return tethrConnection.GetRecordingStatus(sessionIds);
 }
 
-tethr::SendFileResult SendFile(std::string jsonFileName)
+tethr::SendFileResult SendFile(tethr::RecordingInfo recordingInfo, std::string audioFilePath, std::string mediaType)
 {
 	// Create an Instance of the Archive Recording provider used to send archived audio to Tethr
 	tethr::ArchivedRecording tethrConnection(_session);
 
-	// NOTE: We have to do some additional parsing of the JSON to make the sample unique and reusable in this example.
-
-	// NOTE: Session ID should be something that can be used by other systems to connect a call in Tethr
-	// to the same call in other systems.  The sessionID must be unique per recording.
-	//
-	// For this example, we are appending the time so we can test with the same file multiple times.
-	// but should be a more meaningful value in production.
-	Poco::Util::JSONConfiguration json(jsonFileName);
-	std::stringstream jsonStream;
-
-	Poco::Timestamp now;
-	std::stringstream sessionId;
-	sessionId << now.utcTime();
-
-	json.setString("sessionId", sessionId.str());
-	json.save(jsonStream);  //Save the json to a stringstream
-
-	Poco::JSON::Parser parser;
-	Poco::Dynamic::Var jsonParseResult = parser.parse(jsonStream.str());
-
-	//Create JSON object Pointer
-	Poco::JSON::Object::Ptr jsonObject = jsonParseResult.extract<Poco::JSON::Object::Ptr>();
-
-	Poco::FileOutputStream sampleRecording("SampleRecording.json");
-	jsonObject->stringify(sampleRecording);
-	sampleRecording.close();
-
-	Poco::Path audioFilePath(jsonFileName);
-	audioFilePath.setExtension("wav");
-
-	tethr::ArchiveCallResponse result = tethrConnection.SendRecording(jsonFileName, audioFilePath.getFileName(), "audio/wav");
+	tethr::ArchiveCallResponse result = tethrConnection.SendRecording(recordingInfo, audioFilePath, "audio/wav");
 
 	tethr::SendFileResult fileResult;
 	fileResult.CallId = result.CallId;
-	fileResult.SessionId = sessionId.str();
+	fileResult.SessionId = recordingInfo.SessionId;
 
 	return fileResult;
 }
+
 
 int main()
 {
@@ -84,8 +55,57 @@ int main()
 		_session = tethr::Session::GetInstance(cs.HostUri, cs.ApiUser, cs.Password);
 		
 		//Send Recording example
-		std::string fileName = "SampleRecording.json";
-		tethr::SendFileResult result = SendFile(fileName);
+		tethr::Contact contact1;
+		contact1.Channel = 0;
+		contact1.FirstName = "Johny";
+		contact1.LastName = "Doe";
+		contact1.PhoneNumber = "1001";
+		contact1.ReferenceId = "12445";
+		contact1.Type = "agent";
+
+		tethr::Contact contact2;
+		contact2.Channel = 1;
+		contact2.FirstName = "Jane";
+		contact2.LastName = "Doe";
+		contact2.PhoneNumber = "1002";
+		contact2.ReferenceId = "12446";
+		contact2.Type = "customer";
+
+		//The sessionId should be unique to the call.  You can use the sessionId to perform other api functions.
+		//For this sample we are just setting it to a UTC time string.
+		Poco::Timestamp nownow;
+		std::stringstream sessionId;
+		sessionId << nownow.utcTime();
+
+		tethr::RecordingInfo recordingInfo;
+		recordingInfo.SessionId = sessionId.str();
+		recordingInfo.MasterCallId = "3bef3ef1495c49e19bfd21951afcf043";
+		recordingInfo.Direction = tethr::Inbound;
+		recordingInfo.NumberDialed = "1001";
+
+		
+		recordingInfo.Contacts.push_back(contact1);
+		recordingInfo.Contacts.push_back(contact2);
+
+		recordingInfo.Metadata.insert(std::make_pair("key1", "value2"));
+		recordingInfo.Metadata.insert(std::make_pair("key2", "value2"));
+
+		// NOTE: it is important that the audio length and the reported call length are the same.
+		// If this is not true, Tethr may have harder time accurately detecting what actually happened on a call
+		// By default, Tethr will quarantine calls where the reported time and audio length do not match, and wait for
+		// human interaction to fix any miss configurations.  (Contact Support if you think you need this changed)
+		//This is just a sample.  Times should be in UTC
+
+		//Internally we convert the utc epoch time to a POCO::Timestamp and then format it with the DateTimeFormatter so that the JSON has the correct datetime format 
+		//for Tethr.
+		time_t now = time(0);
+		tm *gmtm = gmtime(&now);
+		time_t utcNow = mktime(gmtm);
+
+		recordingInfo.StartTime = utcNow;  //This should be the UTC start time 
+		recordingInfo.EndTime = utcNow; //UtC end time
+
+		tethr::SendFileResult result = SendFile(recordingInfo, "SampleRecording.wav", "audio/wav");
 
 		std::string localTime(Poco::DateTimeFormatter::format(result.StartTime, "%e %b %Y %H:%M"));
 

@@ -281,10 +281,13 @@
   <ItemGroup>
     <ClInclude Include="ArchiveCallResponse.h" />
     <ClInclude Include="ArchivedRecording.h" />
+    <ClInclude Include="Audio.h" />
     <ClInclude Include="CallDirection.h" />
     <ClInclude Include="CallStatus.h" />
     <ClInclude Include="Configuration.h" />
     <ClInclude Include="ConnectionString.h" />
+    <ClInclude Include="Contact.h" />
+    <ClInclude Include="RecordingInfo.h" />
     <ClInclude Include="RecordingSettings.h" />
     <ClInclude Include="RecordingSettingSummary.h" />
     <ClInclude Include="SendFileResult.h" />
@@ -296,6 +299,7 @@
   <ItemGroup>
     <ClCompile Include="ArchivedRecording.cpp" />
     <ClCompile Include="Configuration.cpp" />
+    <ClCompile Include="RecordingInfo.cpp" />
     <ClCompile Include="RecordingSettings.cpp" />
     <ClCompile Include="Session.cpp" />
     <ClCompile Include="Token.cpp" />

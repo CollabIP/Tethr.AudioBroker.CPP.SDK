@@ -20,17 +20,17 @@ namespace tethr
 	/// <param name="mediaType">Type of the media.</param>
 	/// <returns>ArchiveC</returns>
 	/// <remarks>Throws Poco::ApplicationException</remarks>
-	ArchiveCallResponse ArchivedRecording::SendRecording(std::string jsonFileName, std::string audioFileName, std::string mediaType)
+	ArchiveCallResponse ArchivedRecording::SendRecording(RecordingInfo recordingInfo, std::string audioFileName, std::string mediaType)
 	{
 		try
 		{
-			// Setting the Audio Format to make sure it matches the media type, RecordingInfo.Audio will be obsoleted at some point in favor of only looking at the media type.
-			Poco::JSON::Object::Ptr jsonObject = SetAudioFormat(jsonFileName, mediaType);
-
+			Poco::JSON::Object::Ptr jsonObject = ConvertRecordingInfoToJson(recordingInfo, mediaType);
+			
 			std::string result = _session->PostMutliPartFormData("/callCapture/v1/archive", jsonObject, audioFileName, mediaType);
 
 			//Parse JSON
 			Poco::JSON::Parser parser;
+			
 			Poco::Dynamic::Var jsonParseResult = parser.parse(result);
 
 			//Create JSON object Pointer
@@ -230,28 +230,99 @@ namespace tethr
 
 		throw Poco::ApplicationException("An unexpected error occured while getting the recording status.");
 	}
-	
-	/// <summary>
-	/// Sets the audio format. (Helper)
-	/// </summary>
-	/// <param name="jsonFileName">Name of the json file.</param>
-	/// <param name="mediaType">Type of the media.</param>
-	/// <returns></returns>
-	Poco::JSON::Object::Ptr ArchivedRecording::SetAudioFormat(std::string jsonFileName, std::string mediaType)
+
+	Poco::JSON::Object::Ptr ArchivedRecording::ConvertRecordingInfoToJson(RecordingInfo recordingInfo, std::string mediaType)
 	{
-		Poco::Util::JSONConfiguration json(jsonFileName);
-		std::stringstream jsonStream;
-		json.save(jsonStream);  //Save the json to a stringstream
+		// Setting the Audio Format to make sure it matches the media type, RecordingInfo.Audio will be obsoleted at some point in favor of only looking at the media type.
+		Poco::JSON::Object::Ptr base = new Poco::JSON::Object(true);
+		
+		//Set SessionId
+		if (recordingInfo.SessionId.empty())
+		{
+			throw new std::exception("The sessionId cannot be empty and should be unique.");
+		}
+		
+		base->set("sessionId", recordingInfo.SessionId);
+		
+		//Set the MasterCallId
+		base->set("masterCallId", recordingInfo.MasterCallId);
 
-		//Setup JSON Parsing
-		Poco::JSON::Parser parser;
-		Poco::Dynamic::Var jsonParseResult = parser.parse(jsonStream.str());
+		//Set the number dialed
+		base->set("numberDialed", recordingInfo.NumberDialed);
+		
 
+		//Check local and convert to utc
+		Poco::Timestamp ts_start(Poco::Timestamp::fromEpochTime(recordingInfo.StartTime));
+		Poco::Timestamp ts_end(Poco::Timestamp::fromEpochTime(recordingInfo.EndTime));
+
+		Poco::DateTime dt_startTime(ts_start);
+		Poco::DateTime dt_endTime(ts_end);
+
+		std::string utcStartTime(Poco::DateTimeFormatter::format(dt_startTime, "%Y-%m-%dT%H:%M:%sZ"));
+		std::string utcEndTime(Poco::DateTimeFormatter::format(dt_startTime, "%Y-%m-%dT%H:%M:%sZ"));
+
+		base->set("startTime", utcStartTime);
+		base->set("endTime", utcEndTime);
+		
+		//Set the call direction
+		switch(recordingInfo.Direction)
+		{
+		case Inbound:
+			base->set("direction", "Inbound");
+			break;
+		case Outbound:
+			base->set("direction", "Outbound");
+			break;
+		case Internal:
+			base->set("direction", "Internal");
+			break;
+		case Unknown:
+			base->set("direction", "Unknown");
+			break;
+		default:
+			base->set("direction", "Unknown");
+			break;
+		}
+		
+		//Set Contacts Array
+		Poco::JSON::Array::Ptr contactsArray = new Poco::JSON::Array();
+		std::vector<tethr::Contact>::iterator contacts_iter;
+		
+		int contactsCounter = 0;
+		for (contacts_iter= recordingInfo.Contacts.begin(); contacts_iter != recordingInfo.Contacts.end(); ++contacts_iter)
+		{
+		
+			Poco::JSON::Object::Ptr contact = new Poco::JSON::Object(true);
+
+			contact->set("channel", contacts_iter->Channel);
+			contact->set("firstName", contacts_iter->FirstName);
+			contact->set("lastName", contacts_iter->LastName);
+			contact->set("phoneNumber", contacts_iter->PhoneNumber);
+			contact->set("referenceId", contacts_iter->ReferenceId);
+			contact->set("type", contacts_iter->Type);
+			
+			contactsArray->set(contactsCounter, contact);
+
+			contactsCounter++;
+		}
+
+		//Add Contacts Array to the base object
+		base->set("contacts", contactsArray);
+
+		//Set Metadata Object
+		Poco::JSON::Object::Ptr metadataObject= new Poco::JSON::Object(true);
+
+		std::map<std::string, std::string>::iterator metadata_iter;
+		
+		for (metadata_iter = recordingInfo.Metadata.begin(); metadata_iter != recordingInfo.Metadata.end(); ++metadata_iter)
+		{
+			metadataObject->set(metadata_iter->first, metadata_iter->second);
+		}
+
+		base->set("metadata", metadataObject);
+		
+		//Set Audio Type (Should be deprecated)
 		Poco::JSON::Object::Ptr audioFormatObj = new Poco::JSON::Object();
-		
-		//Create JSON object Pointer
-		Poco::JSON::Object::Ptr jsonObject = jsonParseResult.extract<Poco::JSON::Object::Ptr>();
-		
 		if (_stricmp(mediaType.c_str(), "audio/x-wav") == 0 ||
 			_stricmp(mediaType.c_str(), "audio/wave") == 0 ||
 			_stricmp(mediaType.c_str(), "audio/vnd.wav") == 0 ||
@@ -261,7 +332,7 @@ namespace tethr
 			// Setting the audio value as some instance of Tethr may still be looking for this.
 			// Will be removed from SDK, once it is fully removed from Tethr servers.
 			audioFormatObj->set("Format", "wav");
-			jsonObject->set("Audio", audioFormatObj);
+			base->set("Audio", audioFormatObj);
 
 			// Set the media type to the one used by default in Tethr.
 			mediaType = "audio/wav";
@@ -269,19 +340,24 @@ namespace tethr
 		else if (_stricmp(mediaType.c_str(), "audio/mp3") == 0)
 		{
 			audioFormatObj->set("Format", "mp3");
-			jsonObject->set("Audio", audioFormatObj);
+			base->set("Audio", audioFormatObj);
 		}
 		else if (_stricmp(mediaType.c_str(), "audio/ogg") == 0)
 		{
 			audioFormatObj->set("Format", "opus");
-			jsonObject->set("Audio", audioFormatObj);
+			base->set("Audio", audioFormatObj);
 		}
 		else
 		{
 			//Check the file type is wav, If they are not attaching a file, we only support Wav files.
-			throw Poco::ApplicationException("Only Wav, MP3, or OPUS files are supported files.");
+			throw std::exception("Only Wav, MP3, or OPUS files are supported files.");
 		}
 
-		return jsonObject;
+		/*std::stringstream infoStream;
+		base->stringify(infoStream);
+
+		std::string info = infoStream.str();*/
+		return base;
+
 	}
 }

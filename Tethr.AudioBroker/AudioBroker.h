@@ -39,5 +39,6 @@
 #include "Poco/DateTimeFormatter.h"
 #include "Poco/DateTimeFormat.h"
 #include "Poco/Path.h"
+#include "Poco/Foundation.h"
 
 //Todo: Make XPlatform
