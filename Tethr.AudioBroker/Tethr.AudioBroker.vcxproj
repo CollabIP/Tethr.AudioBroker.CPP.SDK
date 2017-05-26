@@ -33,6 +33,22 @@
       <Configuration>release_shared_100_unicode</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="release_static_md_100_unicode|Win32">
+      <Configuration>release_static_md_100_unicode</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release_static_md_100_unicode|x64">
+      <Configuration>release_static_md_100_unicode</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release_static_mt_100_unicode|Win32">
+      <Configuration>release_static_mt_100_unicode</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release_static_mt_100_unicode|x64">
+      <Configuration>release_static_mt_100_unicode</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -60,34 +76,58 @@
     <PlatformToolset>v100</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_static_md_100_unicode|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v100</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_static_mt_100_unicode|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v100</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_shared_100_unicode|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_static_mt_100_unicode|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v100</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_shared_100_unicode|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v100</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_shared_100_unicode|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v100</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_static_md_100_unicode|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v100</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_static_md_100_unicode|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v100</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_static_mt_100_unicode|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v100</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_static_mt_100_unicode|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v100</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -104,7 +144,13 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='debug_static_md_100_unicode|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='release_static_md_100_unicode|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='debug_static_mt_100_unicode|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='release_static_mt_100_unicode|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='debug_shared_100_unicode|x64'">
@@ -116,7 +162,13 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='debug_static_md_100_unicode|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='release_static_md_100_unicode|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='debug_static_mt_100_unicode|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='release_static_mt_100_unicode|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -132,7 +184,41 @@
     <OutDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\obj\</IntDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_static_md_100_unicode|Win32'">
+    <OutDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\obj\</IntDir>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_static_mt_100_unicode|Win32'">
+    <OutDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\obj\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_static_mt_100_unicode|Win32'">
+    <OutDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\obj\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_shared_100_unicode|x64'">
+    <OutDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\obj\</IntDir>
+    <TargetExt>.dll</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_static_md_100_unicode|x64'">
+    <OutDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\obj\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_static_mt_100_unicode|x64'">
+    <OutDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\obj\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_shared_100_unicode|x64'">
+    <OutDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\obj\</IntDir>
+    <TargetExt>.dll</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_static_md_100_unicode|x64'">
+    <OutDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\obj\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_static_mt_100_unicode|x64'">
     <OutDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)\bin\$(Platform)\$(Configuration)\obj\</IntDir>
   </PropertyGroup>
@@ -143,13 +229,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;AUDIOBROKER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\OpenSSL-Win32\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\OpenSSL-Win32\openssl-1.0.2k-32bit-debug-DLL-vs2010\include;$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <ProgramDataBaseFileName>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\Util\bin\Win32\debug_shared_100_unicode;$(SolutionDir)Dependencies\NetSSL_OpenSSL\bin\Win32\debug_shared_100_unicode;$(SolutionDir)Dependencies\Net\bin\Win32\debug_shared_100_unicode;$(SolutionDir)Dependencies\Crypto\bin\Win32\debug_shared_100_unicode;$(SolutionDir)Dependencies\JSON\bin\Win32\debug_shared_100_unicode;$(SolutionDir)Dependencies\Foundation\bin\Win32\debug_shared_100_unicode;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>PocoFoundationd.lib;PocoJSONd.lib;PocoNetd.lib;PocoNetSSLd.lib;PocoUtild.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\OpenSSL-Win32\openssl-1.0.2k-32bit-debug-DLL-vs2010\lib;$(SolutionDir)Dependencies\Util\bin\Win32\debug_shared_100_unicode;$(SolutionDir)Dependencies\NetSSL_OpenSSL\bin\Win32\debug_shared_100_unicode;$(SolutionDir)Dependencies\Net\bin\Win32\debug_shared_100_unicode;$(SolutionDir)Dependencies\Crypto\bin\Win32\debug_shared_100_unicode;$(SolutionDir)Dependencies\JSON\bin\Win32\debug_shared_100_unicode;$(SolutionDir)Dependencies\Foundation\bin\Win32\debug_shared_100_unicode;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>PocoFoundationd.lib;PocoJSONd.lib;PocoNetd.lib;PocoNetSSLd.lib;PocoUtild.lib;libeay32.lib;ssleay32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
       <OutputFile>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).dll</OutputFile>
       <ImportLibrary>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).lib</ImportLibrary>
@@ -164,19 +251,26 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;AUDIOBROKER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\OpenSSL-Win32\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\OpenSSL-Win32\openssl-1.0.2k-32bit-release-DLL-vs2010\include;$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ProgramDataBaseFileName>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\Util\bin\Win32\release_shared_100_unicode;$(SolutionDir)Dependencies\NetSSL_OpenSSL\bin\Win32\release_shared_100_unicode;$(SolutionDir)Dependencies\Net\bin\Win32\release_shared_100_unicode;$(SolutionDir)Dependencies\Crypto\bin\Win32\release_shared_100_unicode;$(SolutionDir)Dependencies\JSON\bin\Win32\release_shared_100_unicode;$(SolutionDir)Dependencies\Foundation\bin\Win32\release_shared_100_unicode;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\OpenSSL-Win32\openssl-1.0.2k-32bit-release-DLL-vs2010\lib;$(SolutionDir)Dependencies\Util\bin\Win32\release_shared_100_unicode;$(SolutionDir)Dependencies\NetSSL_OpenSSL\bin\Win32\release_shared_100_unicode;$(SolutionDir)Dependencies\Net\bin\Win32\release_shared_100_unicode;$(SolutionDir)Dependencies\Crypto\bin\Win32\release_shared_100_unicode;$(SolutionDir)Dependencies\JSON\bin\Win32\release_shared_100_unicode;$(SolutionDir)Dependencies\Foundation\bin\Win32\release_shared_100_unicode;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>PocoFoundation.lib;PocoJSON.lib;PocoNet.lib;PocoNetSSL.lib;PocoUtil.lib;libeay32.lib;ssleay32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
       <OutputFile>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).dll</OutputFile>
       <ImportLibrary>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).lib</ImportLibrary>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
@@ -188,8 +282,38 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;AUDIOBROKER_EXPORTS;AUDIOBROKER_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\OpenSSL-Win32\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_LIB;AUDIOBROKER_EXPORTS;AUDIOBROKER_STATIC;POCO_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\OpenSSL-Win32\openssl-1.0.2k-32bit-debug-static-vs2010\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include</AdditionalIncludeDirectories>
+      <ProgramDataBaseFileName>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>C:\Source\GitHub\POCO-Binaries\1.7.8\Util\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\NetSSL_OpenSSL\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\Net\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\Crypto\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\JSON\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\Foundation\bin\Win32\debug_shared_100_unicode;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>PocoFoundationd.lib;PocoJSONd.lib;PocoNetd.lib;PocoNetSSLd.lib;PocoUtild.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ProgramDatabaseFile>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
+      <OutputFile>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).dll</OutputFile>
+      <ImportLibrary>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).lib</ImportLibrary>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release_static_md_100_unicode|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>WIN32;_NDEBUG;_WINDOWS;_LIB;AUDIOBROKER_EXPORTS;AUDIOBROKER_STATIC;POCO_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\OpenSSL-Win32\openssl-1.0.2k-32bit-release-static-vs2010\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ProgramDataBaseFileName>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -210,9 +334,38 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;POCO_STATIC;AUDIOBROKER_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\OpenSSL-Win32\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_LIB;POCO_STATIC;AUDIOBROKER_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\OpenSSL-Win32\openssl-1.0.2k-32bit-debug-static-vs2010\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <ProgramDataBaseFileName>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>C:\Source\GitHub\POCO-Binaries\1.7.8\Util\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\NetSSL_OpenSSL\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\Net\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\Crypto\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\JSON\bin\Win32\debug_shared_100_unicode;C:\Source\GitHub\POCO-Binaries\1.7.8\Foundation\bin\Win32\debug_shared_100_unicode;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>PocoFoundationd.lib;PocoJSONd.lib;PocoNetd.lib;PocoNetSSLd.lib;PocoUtild.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ProgramDatabaseFile>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
+      <OutputFile>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).dll</OutputFile>
+      <ImportLibrary>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).lib</ImportLibrary>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release_static_mt_100_unicode|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>WIN32;_NDEBUG;_WINDOWS;_LIB;POCO_STATIC;AUDIOBROKER_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\OpenSSL-Win32\openssl-1.0.2k-32bit-release-static-vs2010\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -233,10 +386,18 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;AUDIOBROKER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\OpenSSL-Win64\openssl-1.0.2k-64bit-debug-DLL-vs2010\include;$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <OutputFile>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).dll</OutputFile>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\OpenSSL-Win64\openssl-1.0.2k-64bit-debug-DLL-vs2010\lib;$(SolutionDir)Dependencies\Util\bin\x64\debug_shared_100_unicode;$(SolutionDir)Dependencies\NetSSL_OpenSSL\bin\x64\debug_shared_100_unicode;$(SolutionDir)Dependencies\Net\bin\x64\debug_shared_100_unicode;$(SolutionDir)Dependencies\Crypto\bin\x64\debug_shared_100_unicode;$(SolutionDir)Dependencies\JSON\bin\x64\debug_shared_100_unicode;$(SolutionDir)Dependencies\Foundation\bin\x64\debug_shared_100_unicode;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>PocoFoundationd.lib;PocoJSONd.lib;PocoNetd.lib;PocoNetSSLd.lib;PocoUtild.lib;libeay32.lib;ssleay32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
+      <ImportLibrary>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release_shared_100_unicode|x64'">
@@ -244,11 +405,21 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;AUDIOBROKER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\OpenSSL-Win64\openssl-1.0.2k-64bit-release-DLL-vs2010\include;$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <ProgramDataBaseFileName>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <OutputFile>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).dll</OutputFile>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\OpenSSL-Win64\openssl-1.0.2k-64bit-release-DLL-vs2010\lib;$(SolutionDir)Dependencies\Util\bin\x64\release_shared_100_unicode;$(SolutionDir)Dependencies\NetSSL_OpenSSL\bin\x64\release_shared_100_unicode;$(SolutionDir)Dependencies\Net\bin\x64\release_shared_100_unicode;$(SolutionDir)Dependencies\Crypto\bin\x64\release_shared_100_unicode;$(SolutionDir)Dependencies\JSON\bin\x64\release_shared_100_unicode;$(SolutionDir)Dependencies\Foundation\bin\x64\release_shared_100_unicode;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>PocoFoundation.lib;PocoJSON.lib;PocoNet.lib;PocoNetSSL.lib;PocoUtil.lib;libeay32.lib;ssleay32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ImportLibrary>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).lib</ImportLibrary>
+      <ProgramDatabaseFile>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_static_md_100_unicode|x64'">
@@ -257,11 +428,35 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_LIB;AUDIOBROKER_EXPORTS;AUDIOBROKER_STATIC;POCO_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\OpenSSL-Win64\openssl-1.0.2k-64bit-debug-static-vs2010\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
     </Link>
+    <Lib>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release_static_md_100_unicode|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>WIN32;_NDEBUG;_WINDOWS;_LIB;AUDIOBROKER_EXPORTS;AUDIOBROKER_STATIC;POCO_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\OpenSSL-Win64\openssl-1.0.2k-64bit-release-static-vs2010\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ProgramDataBaseFileName>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <Lib>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_static_mt_100_unicode|x64'">
     <ClCompile>
@@ -269,11 +464,36 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_LIB;POCO_STATIC;AUDIOBROKER_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\OpenSSL-Win64\openssl-1.0.2k-64bit-debug-static-vs2010\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
     </Link>
+    <Lib>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release_static_mt_100_unicode|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>WIN32;_NDEBUG;_WINDOWS;_LIB;POCO_STATIC;AUDIOBROKER_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Crypto\include;$(SolutionDir)Dependencies\OpenSSL-Win32\openssl-1.0.2k-32bit-release-static-vs2010\include;$(SolutionDir)Dependencies\Util\include;$(SolutionDir)Dependencies\Net\include;$(SolutionDir)Dependencies\NetSSL_OpenSSL\include;$(SolutionDir)Dependencies\JSON\include;$(SolutionDir)Dependencies\Foundation\include</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ProgramDataBaseFileName>$(ProjectDir)\bin\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <Lib>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -294,6 +514,7 @@
     <ClInclude Include="Session.h" />
     <ClInclude Include="AudioBroker.h" />
     <ClInclude Include="SessionStatus.h" />
+    <ClInclude Include="StreamPartSource.h" />
     <ClInclude Include="Token.h" />
   </ItemGroup>
   <ItemGroup>
@@ -302,6 +523,7 @@
     <ClCompile Include="RecordingInfo.cpp" />
     <ClCompile Include="RecordingSettings.cpp" />
     <ClCompile Include="Session.cpp" />
+    <ClCompile Include="StreamPartSource.cpp" />
     <ClCompile Include="Token.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

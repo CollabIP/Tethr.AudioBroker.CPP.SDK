@@ -46,7 +46,7 @@ int main()
 {
 	try
 	{
-		//Create the Session
+		// Create the Session
 		// The Session object should be a singleton, and reused on subsequent sends so that
 		// the oauth bearer token can be reused and refreshed only when it expires
 		tethr::Configuration config;
@@ -57,7 +57,7 @@ int main()
 		//Send Recording example
 		tethr::Contact contact1;
 		contact1.Channel = 0;
-		contact1.FirstName = "Johny";
+		contact1.FirstName = "John";
 		contact1.LastName = "Doe";
 		contact1.PhoneNumber = "1001";
 		contact1.ReferenceId = "12445";
@@ -83,7 +83,6 @@ int main()
 		recordingInfo.Direction = tethr::Inbound;
 		recordingInfo.NumberDialed = "1001";
 
-		
 		recordingInfo.Contacts.push_back(contact1);
 		recordingInfo.Contacts.push_back(contact2);
 
